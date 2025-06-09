@@ -2,8 +2,8 @@ services:
   time:
     image: mcp/time
   oracle:
-    image: mcp/oracle
+    image: mochoa/mcp-oracle
     command: ["host.docker.internal:1521/freepdb1"]
     environment:
-      - ORACLE_USER=hr
-      - ORACLE_PASSWORD=hr_2025
+      - ORACLE_USER=scott
+      - ORACLE_PASSWORD=tiger

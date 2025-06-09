@@ -28,7 +28,7 @@ The server provides schema information for each table in the database current co
 - **Table Schemas** (`oracle://USER/<table>/schema`)
   - JSON schema information for each table
   - Includes column names and data types
-  - Automatically discovered from database metadata
+  - Automatically discovered from database metadata using dbms_developer package (23c)
 
 ## Usage with Claude Desktop
 
@@ -52,7 +52,7 @@ To use this server with the Claude Desktop app, add the following configuration 
         "ORACLE_USER=scott",
         "-e",
         "ORACLE_PASSWORD=tiger",
-        "mcp/oracle", 
+        "mochoa/mcp-oracle", 
         "host.docker.internal:1521/freepdb1"]
     }
   }
@@ -96,15 +96,109 @@ WHERE DEPARTMENT_ID IN 
 GROUP BY COUNTRY_NAME, CITY
 - explain the execution plan
 - visualize above execution plan
+
+Here's a visualization of the execution plan:
+
+```ascii
+SELECT STATEMENT (0)
+└── HASH GROUP BY (1)
+    └── NESTED LOOPS (2)
+        └── NESTED LOOPS (3)
+            ├── VIEW VW_GBF_17 (4)
+            │   └── HASH GROUP BY (5)
+            │       └── FILTER (6)
+            │           ├── TABLE ACCESS FULL DEPARTMENTS (7)
+            │           └── FILTER (8)
+            │               └── HASH GROUP BY (9)
+            │                   └── TABLE ACCESS FULL EMPLOYEES (10)
+            ├── TABLE ACCESS BY INDEX ROWID LOCATIONS (11)
+            │   └── INDEX UNIQUE SCAN LOC_ID_PK (12)
+            └── INDEX UNIQUE SCAN COUNTRY_C_ID_PK (13)
+```
+
+The numbers in parentheses correspond to the operation IDs in the plan. The execution flows from bottom to top and right to left:
+
+1. Scans employees table to find departments with >5 employees
+2. Filters departments based on those results
+3. Uses index scans to efficiently join with locations and countries
+4. Groups results by country and city with hash grouping
+
+Key operations:
+- Hash grouping for aggregation (ID: 1, 5, 9)
+- Nested loop joins for efficient joining (ID: 2, 3)
+- Index scans for fast lookups (ID: 12, 13)
+- Full table scans where needed (ID: 7, 10)
+
 - get stats of COUNTRIES, LOCATIONS and DEPARTMENTS
 - based on above table and index stats rewrite above query with a better execution plan
 - visualize original and rewritten execution plan
+
+### Comparison of Original vs Optimized Query Execution Plans
+
+Original Query Execution Plan:
+```ascii
+SELECT STATEMENT (0)
+└── HASH GROUP BY (1)
+    └── NESTED LOOPS (2)
+        └── NESTED LOOPS (3)
+            ├── VIEW VW_GBF_17 (4)
+            │   └── HASH GROUP BY (5)
+            │       └── FILTER (6)
+            │           ├── TABLE ACCESS FULL DEPARTMENTS (7)
+            │           └── FILTER (8)
+            │               └── HASH GROUP BY (9)
+            │                   └── TABLE ACCESS FULL EMPLOYEES (10)
+            ├── TABLE ACCESS BY INDEX ROWID LOCATIONS (11)
+            │   └── INDEX UNIQUE SCAN LOC_ID_PK (12)
+            └── INDEX UNIQUE SCAN COUNTRY_C_ID_PK (13)
+```
+
+Optimized Query Execution Plan:
+```ascii
+SELECT STATEMENT (0)
+└── HASH GROUP BY (1)
+    └── FILTER (2)
+        └── NESTED LOOPS (3)
+            ├── HASH JOIN (4)
+            │   ├── VIEW index$_join$_001 (5)
+            │   │   └── HASH JOIN (6)
+            │   │       ├── INDEX FAST FULL SCAN DEPT_ID_PK (7)
+            │   │       └── INDEX FAST FULL SCAN DEPT_LOCATION_IX (8)
+            │   └── TABLE ACCESS FULL LOCATIONS (9)
+            ├── INDEX UNIQUE SCAN COUNTRY_C_ID_PK (10)
+            └── FILTER (11)
+                └── HASH GROUP BY (12)
+                    └── TABLE ACCESS FULL EMPLOYEES (13)
+```
+
+Key Differences:
+1. Join Strategy:
+   - Original: Uses nested loops throughout
+   - Optimized: Mix of hash joins and nested loops for better performance
+   
+2. Index Usage:
+   - Original: Basic index scans
+   - Optimized: Uses fast full index scans on department indexes
+   
+3. Subquery Handling:
+   - Original: Uses materialized view (VW_GBF_17)
+   - Optimized: Direct filter with exists clause
+   
+4. Join Order:
+   - Original: Starts with departments/employees subquery
+   - Optimized: Starts with departments (LEADING hint) for better join order
+
+Both plans have similar overall cost (62) but the optimized version:
+- Has better index utilization
+- More efficient join strategies
+- Improved subquery processing
+- Better join order based on table statistics
 
 See in action using Claude Desktop App
 
 ![Oracle MCP Server demo](./demo-prompts.gif)
 
-### Using Docker AI
+## Using Docker AI
 
 [Ask Gordon](https://docs.docker.com/desktop/features/gordon/) is an AI assistant designed to streamline your Docker workflow by providing contextual assistance tailored to your local environment. Currently in Beta and available in Docker Desktop version 4.38.0 or later, Ask Gordon offers intelligent support for various Docker-related tasks.
 
@@ -165,7 +259,7 @@ services:
   time:
     image: mcp/time
   oracle:
-    image: mcp/oracle
+    image: mochoa/mcp-oracle
     command: ["host.docker.internal:1521/freepdb1"]
     environment:
       - ORACLE_USER=scott
@@ -177,7 +271,7 @@ services:
 Docker:
 
 ```sh
-docker build -t mcp/oracle -f src/oracle/Dockerfile . 
+docker build -t mochoa/mcp-oracle -f src/oracle/Dockerfile . 
 ```
 
 ## License
