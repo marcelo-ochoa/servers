@@ -74,7 +74,7 @@ To use this server with the Claude Desktop app, add the following configuration 
       "command": "npx",
       "args": [
         "-y",
-        "@modelcontextprotocol/server-oracle",
+        "@marcelo-ochoa/server-oracle",
         "localhost:1521/freepdb1"
       ],
       "env": {

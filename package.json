@@ -22,7 +22,7 @@
     "@modelcontextprotocol/server-everything": "*",
     "@modelcontextprotocol/server-filesystem": "*",
     "@modelcontextprotocol/server-memory": "*",
-    "@modelcontextprotocol/server-oracle": "*",
+    "@marcelo-ochoa/server-oracle": "*",
     "@modelcontextprotocol/server-sequential-thinking": "*"
   }
 }
