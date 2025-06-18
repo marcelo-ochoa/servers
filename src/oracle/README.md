@@ -108,7 +108,7 @@ GROUP BY COUNTRY_NAME, CITY
 
 See in action using Claude Desktop App
 
-![Oracle MCP Server demo](./demo-prompts.gif)
+![Oracle MCP Server demo](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/demo-prompts.gif?raw=true)
 
 ### Using Docker AI
 
