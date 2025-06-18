@@ -12,8 +12,8 @@ import oracledb from "oracledb";
 
 const server = new Server(
   {
-    name: "example-servers/oracle",
-    version: "0.1.0",
+    name: "oracle-server",
+    version: "0.6.3",
   },
   {
     capabilities: {
