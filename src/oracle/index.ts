@@ -13,7 +13,7 @@ import oracledb from "oracledb";
 const server = new Server(
   {
     name: "oracle-server",
-    version: "0.6.3",
+    version: "0.6.4",
   },
   {
     capabilities: {
@@ -28,7 +28,8 @@ const prompts = [
   { id: 1, text: "query select * from COUNTRIES" },
   { id: 2, text: "explain select * from COUNTRIES" },
   { id: 3, text: "stats COUNTRIES" },
-  { id: 4, text: "connect to Oracle using an string like host.docker.internal:1521/freepdb1 user name and password" }
+  { id: 4, text: "connect to Oracle using an string like host.docker.internal:1521/freepdb1 user name and password" },
+  { id: 5, text: "Automatic Workload Repository (AWR) with optional sql_id, requires SELECT_CATALOG_ROLE and grant execute on DBMS_WORKLOAD_REPOSITORY package" }
 ];
 
 const args = process.argv.slice(2);
@@ -203,6 +204,16 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ["connectionString", "user", "password"],
         },
       },
+      {
+        name: "awr",
+        description: "Generate an AWR report or AWR SQL report. Optional parameter: sql_id.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            sql_id: { type: "string" },
+          },
+        },
+      },
     ],
   };
 });
@@ -365,6 +376,104 @@ FROM dual`, [tableName,tableName,tableName], { outFormat: oracledb.OUT_FORMAT_OB
         content: [{ type: "text", text: `Failed to connect: ${err}` }],
         isError: true,
       };
+    }
+  }
+  if (request.params.name === "awr") {
+    let connection;
+    try {
+      connection = await pool.getConnection();
+      // Step 1: Get dbid
+      const dbidResult = await connection.execute<{ DBID: number }>(
+        `SELECT dbid FROM v$database`, [], { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+      const dbid = dbidResult.rows?.[0]?.DBID;
+      if (!dbid) {
+        return {
+          content: [{ type: "text", text: "Could not retrieve DBID from v$database." }],
+          isError: true,
+        };
+      }
+      // Step 2: Get begin_snap_id and end_snap_id
+      const snapResult = await connection.execute<{
+        BEGIN_SNAP_ID: number;
+        END_SNAP_ID: number;
+      }>(
+        `WITH multi_instance_snaps AS (
+          SELECT snap_id
+          FROM dba_hist_snapshot
+          GROUP BY snap_id
+          HAVING COUNT(*) > 1
+        ),
+        recent_snaps AS (
+          SELECT snap_id
+          FROM multi_instance_snaps
+          ORDER BY snap_id DESC
+          FETCH FIRST 2 ROWS ONLY
+        )
+        SELECT
+          MIN(s1.snap_id) AS begin_snap_id,
+          MAX(s2.snap_id) AS end_snap_id,
+          s1.startup_time
+        FROM
+          dba_hist_snapshot s1
+        JOIN
+          dba_hist_snapshot s2
+            ON s1.startup_time = s2.startup_time
+           AND s1.snap_id < s2.snap_id
+        WHERE
+          s1.snap_id IN (SELECT snap_id FROM recent_snaps)
+          AND s2.snap_id IN (SELECT snap_id FROM recent_snaps)
+          AND s1.begin_interval_time >= SYSDATE - 1
+          AND s2.begin_interval_time >= SYSDATE - 1
+        GROUP BY s1.startup_time
+        ORDER BY end_snap_id DESC
+        FETCH FIRST 1 ROW ONLY`,
+        [],
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+      const begin_snap_id = snapResult.rows?.[0]?.BEGIN_SNAP_ID;
+      const end_snap_id = snapResult.rows?.[0]?.END_SNAP_ID;
+      if (!begin_snap_id || !end_snap_id) {
+        return {
+          content: [{ type: "text", text: "Could not retrieve snapshot IDs." }],
+          isError: true,
+        };
+      }
+      // Step 3: Generate AWR report
+      const sql_id = request.params.arguments?.sql_id;
+      let awrResult;
+      if (!sql_id) {
+        awrResult = await connection.execute(
+          `SELECT output FROM TABLE(dbms_workload_repository.awr_report_text(:dbid, 1, :begin_snap_id, :end_snap_id))`,
+          [dbid, begin_snap_id, end_snap_id],
+          { outFormat: oracledb.OUT_FORMAT_OBJECT }
+        );
+      } else {
+        awrResult = await connection.execute(
+          `SELECT output FROM TABLE(dbms_workload_repository.awr_sql_report_text(:dbid, 1, :begin_snap_id, :end_snap_id, :sql_id))`,
+          [dbid, begin_snap_id, end_snap_id, sql_id],
+          { outFormat: oracledb.OUT_FORMAT_OBJECT }
+        );
+      }
+      // The report is a multi-row text output, concatenate all rows
+      const reportText = awrResult.rows?.map((r: any) => r.OUTPUT).join("\n") ?? "No report output.";
+      return {
+        content: [{ type: "text", text: reportText }],
+        isError: false,
+      };
+    } catch (error: any) {
+      return {
+        content: [{ type: "text", text: `Error generating AWR report: ${error?.message ?? error}` }],
+        isError: true,
+      };
+    } finally {
+      if (connection) {
+        try {
+          await connection.close();
+        } catch (err) {
+          console.warn("Could not close connection:", err);
+        }
+      }
     }
   }
   throw new Error(`Unknown tool: ${request.params.name}`);

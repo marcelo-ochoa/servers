@@ -27,6 +27,10 @@ A Model Context Protocol server that provides read-only access to Oracle Databas
   - Input: `user` (string): Username for example scott
   - Input: `password` (string): Password, for example tiger
 
+- **awr**
+  - Automatic Workload Repository (AWR) with optional sql_id, requires SELECT_CATALOG_ROLE and grant execute on DBMS_WORKLOAD_REPOSITORY package
+  - Input: `sql_id` (string): (optional) SQL id to get the AWR report
+
 ### Resources
 
 The server provides schema information for each table in the Oracle Database current connected user:
@@ -94,14 +98,14 @@ Sample prompts using the Oracle Database sample HR schema and
 [Oracle Database 23ai Free embedded database - Faststart - Docker Desktop Extension](https://open.docker.com/extensions/marketplace?extensionId=mochoa/oraclefree-docker-extension) .
 
 - query SELECT COUNTRY_NAME, CITY, COUNT(DEPARTMENT_ID)
-FROM COUNTRIES JOIN LOCATIONS USING (COUNTRY_ID) JOIN DEPARTMENTS USING (LOCATION_ID) 
-WHERE DEPARTMENT_ID IN 
-    (SELECT DEPARTMENT_ID FROM EMPLOYEES 
-   GROUP BY DEPARTMENT_ID 
+FROM COUNTRIES JOIN LOCATIONS USING (COUNTRY_ID) JOIN DEPARTMENTS USING (LOCATION_ID)
+WHERE DEPARTMENT_ID IN
+  (SELECT DEPARTMENT_ID FROM EMPLOYEES
+   GROUP BY DEPARTMENT_ID
    HAVING COUNT(DEPARTMENT_ID)>5)
 GROUP BY COUNTRY_NAME, CITY
 - explain the execution plan
-- visualize above execution plan
+- visualize above execution plan in text mode
 - get stats of COUNTRIES, LOCATIONS and DEPARTMENTS
 - based on above table and index stats rewrite above query with a better execution plan
 - visualize original and rewritten execution plan
