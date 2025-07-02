@@ -29,7 +29,7 @@ A Model Context Protocol server that provides read-only access to Oracle Databas
 
 - **awr**
   - Automatic Workload Repository (AWR) with optional sql_id, requires SELECT_CATALOG_ROLE and grant execute on DBMS_WORKLOAD_REPOSITORY package
-  - Input: `sql_id` (string): (optional) SQL id to get the AWR report
+  - Input: `sql_id` (string): (optional) SQL id to get the AWR report for an specific query, if null full last generated AWR report
 
 ### Resources
 

@@ -13,7 +13,7 @@ import oracledb from "oracledb";
 const server = new Server(
   {
     name: "oracle-server",
-    version: "0.6.4",
+    version: "0.7.0",
   },
   {
     capabilities: {
@@ -29,7 +29,7 @@ const prompts = [
   { id: 2, text: "explain select * from COUNTRIES" },
   { id: 3, text: "stats COUNTRIES" },
   { id: 4, text: "connect to Oracle using an string like host.docker.internal:1521/freepdb1 user name and password" },
-  { id: 5, text: "Automatic Workload Repository (AWR) with optional sql_id, requires SELECT_CATALOG_ROLE and grant execute on DBMS_WORKLOAD_REPOSITORY package" }
+  { id: 5, text: "awr with optional sql_id, requires SELECT_CATALOG_ROLE and grant execute on DBMS_WORKLOAD_REPOSITORY package" }
 ];
 
 const args = process.argv.slice(2);

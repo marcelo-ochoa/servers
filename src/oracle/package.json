@@ -1,6 +1,6 @@
 {
   "name": "@marcelo-ochoa/server-oracle",
-  "version": "0.6.4",
+  "version": "0.7.0",
   "description": "MCP server for interacting with Oracle databases",
   "license": "MIT",
   "author": "Marcelo Fabian Ochoa",
