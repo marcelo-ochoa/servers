@@ -1,4 +1,5 @@
 ---
+description: A Model Context Protocol server that provides read-only access to Oracle Database
 applyTo: "src/oracle/**"
 ---
 # AI Agent Project Instructions: Oracle Server
