@@ -97,6 +97,7 @@ Replace `/freepdb1` with your database name.
 Sample prompts using the Oracle Database sample HR schema and 
 [Oracle Database 23ai Free embedded database - Faststart - Docker Desktop Extension](https://open.docker.com/extensions/marketplace?extensionId=mochoa/oraclefree-docker-extension) .
 
+- connect to host.docker.internal:1521/freepdb1 using hr as user and hr_2025 as password using oracle mcp server
 - query SELECT COUNTRY_NAME, CITY, COUNT(DEPARTMENT_ID)
 FROM COUNTRIES JOIN LOCATIONS USING (COUNTRY_ID) JOIN DEPARTMENTS USING (LOCATION_ID)
 WHERE DEPARTMENT_ID IN
@@ -112,7 +113,7 @@ GROUP BY COUNTRY_NAME, CITY
 
 See in action using Claude Desktop App
 
-![Oracle MCP Server demo](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/demo-prompts.gif?raw=true)
+![Oracle MCP Server demo](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/demo-prompts.gif?raw=true)
 
 ### Using Docker AI
 
@@ -190,6 +191,42 @@ Docker:
 docker build -t mochoa/mcp-oracle -f src/oracle/Dockerfile . 
 ```
 
+## Sources
+
+As usual the code of this extension is at [GitHub](https://github.com/marcelo-ochoa/servers), feel free to suggest changes and make contributions, note that I am a beginner developer of React and TypeScript so contributions to make this UI better are welcome.
+
 ## License
 
 This MCP server is licensed under the MIT License. This means you are free to use, modify, and distribute the software, subject to the terms and conditions of the MIT License. For more details, please see the LICENSE file in the project repository.
+
+## Compared to SQLcl MCP server
+
+Using SQLcl Docker extension you could register a connection using:
+
+```sh
+docker exec --user sqlcl -ti mochoa_sqlcl-docker-extension-desktop-extension-service /opt/sqlcl/bin/sql -save hr_mcp -savepwd hr/hr_2025@host.docker.internal:1521/freepdb1   
+```
+
+after that using this registration:
+
+```yml
+{
+    "mcpServers": {
+      "sqlcl-mcp-server": {
+			  "type": "stdio",
+			  "command": "docker",
+			  "args": [
+				  "exec",
+          "--user",
+          "sqlcl",
+				  "-i",
+				  "mochoa_sqlcl-docker-extension-desktop-extension-service",
+				  "/opt/sqlcl/bin/sql",
+				  "-mcp"
+			  ]
+		  }
+    }
+}
+```
+
+Just replace above Demo prompts instead of "query" tool use "run-sql".

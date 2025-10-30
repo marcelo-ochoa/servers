@@ -23,6 +23,7 @@
     "@modelcontextprotocol/server-filesystem": "*",
     "@modelcontextprotocol/server-memory": "*",
     "@marcelo-ochoa/server-oracle": "*",
+    "oracledb": "^6.10.0",
     "@modelcontextprotocol/server-sequential-thinking": "*"
   }
 }
