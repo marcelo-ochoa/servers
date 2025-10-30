@@ -20,14 +20,9 @@
   },
   "dependencies": {
     "@modelcontextprotocol/server-everything": "*",
-<<<<<<< HEAD
-=======
     "@modelcontextprotocol/server-memory": "*",
->>>>>>> c7c549711b1577227d0ff8ff7c67fdbf7e4a0225
     "@modelcontextprotocol/server-filesystem": "*",
-    "@modelcontextprotocol/server-memory": "*",
-    "@marcelo-ochoa/server-oracle": "*",
-    "oracledb": "^6.10.0",
-    "@modelcontextprotocol/server-sequential-thinking": "*"
+    "@modelcontextprotocol/server-sequential-thinking": "*",
+    "@marcelo-ochoa/server-oracle": "*"
   }
 }
