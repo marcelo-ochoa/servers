@@ -183,6 +183,79 @@ services:
       - ORACLE_PASSWORD=tiger
 ```
 
+### Using Gemini CLI
+
+![Gemini CLI Screenshot](https://github.com/google-gemini/gemini-cli/blob/c583b510e09ddf9d58cca5b6132bf19a8f5a8091/docs/assets/gemini-screenshot.png?raw=true)
+
+[Gemini CLI](https://github.com/google-gemini/gemini-cli/) 
+is an open-source AI agent that brings the power of Gemini directly
+into your terminal. It provides lightweight access to Gemini, giving you the
+most direct path from your prompt to our model.
+
+Using this sample settings.json file at ~/.gemini/ directory:
+
+```json
+{
+  "mcpServers": {
+    "oracle": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "ORACLE_USER=sh",
+        "-e",
+        "ORACLE_PASSWORD=sh_2025",
+        "mochoa/mcp-oracle",
+        "host.docker.internal:1521/freepdb1"
+      ]
+    }
+  },
+  "security": {
+    "auth": {
+      "selectedType": "gemini-api-key"
+    }
+  },
+  "ui": {
+    "theme": "ANSI"
+  },
+  "selectedAuthType": "gemini-api-key",
+  "theme": "Dracula"
+}
+```
+
+### Sample prompts with Gemini CLI
+
+- connect to host.docker.internal:1521/freepdb1 using hr as user and hr_2025 as password using oracle mcp server
+  ![connect](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/gemini-cli-connect.png?raw=true)
+
+- query SELECT COUNTRY_NAME, CITY, COUNT(DEPARTMENT_ID)
+  FROM COUNTRIES JOIN LOCATIONS USING (COUNTRY_ID) JOIN DEPARTMENTS USING (LOCATION_ID)
+  WHERE DEPARTMENT_ID IN
+    (SELECT DEPARTMENT_ID FROM EMPLOYEES
+     GROUP BY DEPARTMENT_ID
+     HAVING COUNT(DEPARTMENT_ID)>5)
+  GROUP BY COUNTRY_NAME, CITY
+  ![query](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/gemini-cli-query.png?raw=true)
+
+- explain the execution plan
+  ![explain top](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/gemini-cli-explain-1.png?raw=true)
+  ![explain botton](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/gemini-cli-explain-2.png?raw=true)
+
+- visualize above execution plan in text mode
+  ![visualize](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/gemini-cli-visualize.png?raw=true)
+
+- get stats of COUNTRIES, LOCATIONS and DEPARTMENTS
+  ![stats top](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/gemini-cli-stats-1.png?raw=true)
+  ![stats botton](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/gemini-cli-stats-2.png?raw=true)
+
+- based on above table and index stats rewrite above query with a better execution plan
+  ![new-query](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/gemini-cli-new-query.png?raw=true)
+
+- visualize original and rewritten execution plan
+  ![bot-plans](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/gemini-cli-both-plans.png?raw=true)
+
 ## Building
 
 Docker:
@@ -211,21 +284,21 @@ after that using this registration:
 
 ```yml
 {
-    "mcpServers": {
-      "sqlcl-mcp-server": {
-			  "type": "stdio",
-			  "command": "docker",
-			  "args": [
-				  "exec",
-          "--user",
-          "sqlcl",
-				  "-i",
-				  "mochoa_sqlcl-docker-extension-desktop-extension-service",
-				  "/opt/sqlcl/bin/sql",
-				  "-mcp"
-			  ]
-		  }
+  "mcpServers": {
+    "sqlcl-mcp-server": {
+      "type": "stdio",
+      "command": "docker",
+      "args": [
+        "exec",
+        "--user",
+        "sqlcl",
+        "-i",
+        "mochoa_sqlcl-docker-extension-desktop-extension-service",
+        "/opt/sqlcl/bin/sql",
+        "-mcp"
+      ]
     }
+  }
 }
 ```
 
