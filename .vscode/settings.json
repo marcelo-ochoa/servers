@@ -1,1 +1,19 @@
-{}
+{
+    "gemini.experimental.mcp.server": [
+        {
+            "name": "Oracle MCP Server",
+            "command": "docker",
+            "args": [
+                "run",
+                "-i",
+                "--rm",
+                "-e",
+                "ORACLE_USER=sh",
+                "-e",
+                "ORACLE_PASSWORD=sh_2025",
+                "mochoa/mcp-oracle",
+                "host.docker.internal:1521/freepdb1"
+            ]
+        }
+    ]
+}
