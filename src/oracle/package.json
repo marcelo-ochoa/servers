@@ -21,12 +21,15 @@
     "test": "vitest run --coverage"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.0.1",
+    "@modelcontextprotocol/sdk": "^1.19.1",
     "oracledb": "^6.1.0"
   },
   "devDependencies": {
-    "@types/oracledb": "^6.1.0",
+    "@types/node": "^22",
+    "@types/oracledb": "^6.5.1",
+    "@vitest/coverage-v8": "^2.1.8",
     "shx": "^0.3.4",
-    "typescript": "^5.0.0"
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.8"
   }
 }
