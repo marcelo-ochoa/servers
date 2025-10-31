@@ -261,7 +261,7 @@ Using this sample settings.json file at ~/.gemini/ directory:
 Docker:
 
 ```sh
-docker build -t mochoa/mcp-oracle -f src/oracle/Dockerfile . 
+docker build -t mochoa/mcp-oracle -f src/oracle/Dockerfile .
 ```
 
 ## Sources
