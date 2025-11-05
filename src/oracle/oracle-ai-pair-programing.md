@@ -4,7 +4,7 @@
 
 ## The Thesis: Beyond Vive Coding
 
-Instead of viewing AI-assisted development as "vive coding," we propose a more accurate and powerful metaphor: **AI Pair Programming**. With an AI agent integrated into your development environment and powered by the [Model Context Protocol (MCP) server](https://github.com/marcelo-ochoa/servers), the experience is not one of performing for an audience, but of collaborating with a partner.
+Instead of viewing AI-assisted development as "vive coding," we propose a more accurate and powerful metaphor: **AI Pair Programming**. With an AI agent integrated into your development environment and powered by the [Model Context Protocol (MCP) server](https://github.com/marcelo-ochoa/servers/tree/main/src/oracle), the experience is not one of performing for an audience, but of collaborating with a partner.
 
 ## What is "Vive Coding"?
 
@@ -26,7 +26,7 @@ The paradigm of AI Pair Programming reframes the developer's interaction with AI
 In this model:
 
 *   **The Developer is the Driver:** You are in control, writing code, making the final decisions, and steering the direction of the project.
-*   **The AI is the Navigator:** The AI agent, with the deep context provided by the [MCP server](https://github.com/marcelo-ochoa/servers), acts as your navigator. It can:
+*   **The AI is the Navigator:** The AI agent, with the deep context provided by the [MCP server](https://github.com/marcelo-ochoa/servers/tree/main/src/oracle), acts as your navigator. It can:
     *   Suggest code completions and entire functions.
     *   Identify potential bugs and offer solutions.
     *   Answer questions about the codebase or external libraries.
@@ -42,7 +42,7 @@ Adopting this model offers significant benefits:
 
 *   **Increased Productivity:** Offload repetitive tasks and get instant suggestions to accelerate development cycles.
 *   **Improved Code Quality:** Leverage the AI's ability to spot errors, suggest best practices, and ensure consistency.
-*   **Seamless Database Integration:** The [MCP server](https://github.com/marcelo-ochoa/servers) provides the AI with real-time context about the Oracle database, allowing you to interact with it using natural language without leaving your IDE.
+*   **Seamless Database Integration:** The [MCP server](https://github.com/marcelo-ochoa/servers/tree/main/src/oracle) provides the AI with real-time context about the Oracle database, allowing you to interact with it using natural language without leaving your IDE.
 *   **Enhanced Learning:** The AI can explain complex code or database concepts, acting as a patient and knowledgeable mentor.
 *   **Reduced Cognitive Load:** With the AI handling routine checks and information retrieval, you can focus on the more creative and complex aspects of problem-solving.
 
