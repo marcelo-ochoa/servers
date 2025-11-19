@@ -256,6 +256,32 @@ Using this sample settings.json file at ~/.gemini/ directory:
 - visualize original and rewritten execution plan
   ![bot-plans](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/gemini-cli-both-plans.png?raw=true)
 
+### Using Antigravity Code Editor
+
+![antigravity](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/antigravity.png?raw=true)
+
+```json
+{
+    "mcpServers": {
+        "ORACLE_USER": {
+            "command": "docker",
+            "args": [
+                "run",
+                "-i",
+                "--rm",
+                "-e",
+                "ORACLE_USER=hr",
+                "-e",
+                "ORACLE_PASSWORD=hr_2025",
+                "mochoa/mcp-oracle",
+                "host.docker.internal:1521/freepdb1"
+            ]
+        }
+    },
+    "inputs": []
+}
+```
+
 ## Building
 
 Docker:
