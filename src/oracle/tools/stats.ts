@@ -3,10 +3,10 @@ import { withConnection } from "../db.js";
 import oracledb from "oracledb";
 
 export const statsHandler = async (request: CallToolRequest) => {
-    const tableName = request.params.arguments?.name as string;
+  const tableName = request.params.arguments?.name as string;
 
-    return await withConnection(async (connection) => {
-        const result = await connection.execute<{ STATS_JSON: string }>(`SELECT JSON_OBJECT(
+  return await withConnection(async (connection) => {
+    const result = await connection.execute<{ STATS_JSON: string }>(`SELECT JSON_OBJECT(
             'table_stats' VALUE (
               SELECT JSON_OBJECT(
                 'owner' VALUE owner,
@@ -50,9 +50,9 @@ export const statsHandler = async (request: CallToolRequest) => {
             )
           ) AS stats_json
           FROM dual`, [tableName, tableName, tableName], { outFormat: oracledb.OUT_FORMAT_OBJECT });
-        return {
-            content: [{ type: "text", text: result.rows?.[0]?.STATS_JSON }],
-            isError: false,
-        };
-    });
+    return {
+      content: [{ type: "text", text: result.rows?.[0]?.STATS_JSON, mimeType: "application/json" }],
+      isError: false,
+    };
+  });
 };

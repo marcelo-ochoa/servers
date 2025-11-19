@@ -1,4 +1,5 @@
 import { CallToolRequest } from "@modelcontextprotocol/sdk/types.js";
+import { encode } from "@toon-format/toon";
 import { withConnection } from "../db.js";
 import oracledb from "oracledb";
 
@@ -11,7 +12,7 @@ export const explainHandler = async (request: CallToolRequest) => {
         await connection.execute("EXPLAIN PLAN FOR " + sql);
         const result = await connection.execute("SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY(NULL, NULL, 'ALL'))", [], { outFormat: oracledb.OUT_FORMAT_OBJECT });
         return {
-            content: [{ type: "text", text: JSON.stringify(result.rows, null, 2) }],
+            content: [{ type: "text", text: encode(result.rows) }],
             isError: false,
         };
     });

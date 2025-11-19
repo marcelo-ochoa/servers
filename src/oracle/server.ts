@@ -14,7 +14,7 @@ import { tools } from "./tools.js";
 const server = new Server(
   {
     name: "oracle-server",
-    version: "0.7.2",
+    version: "0.7.3",
   },
   {
     capabilities: {
@@ -34,14 +34,14 @@ const prompts = [
 ];
 
 const PromptsListRequestSchema = z.object({
-    method: z.literal("prompts/list"),
-    params: z.object({}),
+  method: z.literal("prompts/list"),
+  params: z.object({}),
 });
 
 server.setRequestHandler(PromptsListRequestSchema, async () => {
-    return {
-        prompts,
-    };
+  return {
+    prompts,
+  };
 });
 
 server.setRequestHandler(ListResourcesRequestSchema, listResourcesHandler);
