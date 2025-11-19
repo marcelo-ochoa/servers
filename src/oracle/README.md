@@ -260,6 +260,8 @@ Using this sample settings.json file at ~/.gemini/ directory:
 
 ![antigravity](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/antigravity.png?raw=true)
 
+Put this in `~/.gemini/antigravity/mcp_config.json`
+
 ```json
 {
     "mcpServers": {
