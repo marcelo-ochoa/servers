@@ -20,7 +20,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
+      - name: Build and push oracle
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -28,3 +28,11 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: mochoa/mcp-oracle:latest
+      - name: Build and push postgres
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./src/postgres/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: mochoa/mcp-postgres:latest
