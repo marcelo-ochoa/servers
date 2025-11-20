@@ -265,7 +265,7 @@ Put this in `~/.gemini/antigravity/mcp_config.json`
 ```json
 {
     "mcpServers": {
-        "ORACLE_USER": {
+        "oracle": {
             "command": "docker",
             "args": [
                 "run",
