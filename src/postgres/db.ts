@@ -5,16 +5,58 @@ let pool: pg.Pool | undefined = undefined;
 let resourceBaseUrl: URL | undefined = undefined;
 
 export async function initializePool(connectionString: string) {
+    const dbUser = process.env.PG_USER;
+    const dbPassword = process.env.PG_PASSWORD;
+
+    if (!dbUser || !dbPassword) {
+        console.error(
+            "Error: Environment variables PG_USER and PG_PASSWORD must be set.",
+        );
+        process.exit(1);
+    }
+
+    // Parse the connection string to extract host, port, and database
+    // Expected format: postgresql://host:port/dbname or host:port/dbname
+    let host: string;
+    let port: number;
+    let database: string;
+
+    try {
+        // Try parsing as URL first
+        if (connectionString.startsWith('postgresql://') || connectionString.startsWith('postgres://')) {
+            const url = new URL(connectionString);
+            host = url.hostname;
+            port = url.port ? parseInt(url.port) : 5432;
+            database = url.pathname.slice(1); // Remove leading '/'
+        } else {
+            // Parse format: host:port/dbname
+            const match = connectionString.match(/^([^:]+):(\d+)\/(.+)$/);
+            if (!match) {
+                throw new Error("Invalid connection string format. Expected: host:port/dbname or postgresql://host:port/dbname");
+            }
+            host = match[1];
+            port = parseInt(match[2]);
+            database = match[3];
+        }
+    } catch (err) {
+        console.error("Error parsing connection string:", err);
+        process.exit(1);
+    }
+
     pool = new pg.Pool({
-        connectionString,
+        user: dbUser,
+        password: dbPassword,
+        host,
+        port,
+        database,
     });
+
     // Test connection
     const client = await pool.connect();
     client.release();
 
-    const url = new URL(connectionString);
-    url.protocol = "postgres:";
-    url.password = "";
+    // Build resource base URL without credentials
+    const url = new URL(`postgresql://${host}:${port}/${database}`);
     resourceBaseUrl = url;
 }
 

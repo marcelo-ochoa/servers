@@ -25,7 +25,7 @@ export const tools = [
   },
   {
     name: "explain",
-    description: "Explain Plan for a given SQL query",
+    description: "Generate and display the execution plan for a given SQL query using Oracle's EXPLAIN PLAN command. This tool helps you understand how Oracle will execute your query, including information about table access methods, join operations, indexes used, estimated costs, and cardinality estimates.\n\nArgs:\n\n\tsql: The SQL query to explain.\n\n\nThe `model` argument should specify only the name and version of the LLM (Large Language Model) you are using, with no additional information.\nThe `mcp_client` argument should specify only the name of the MCP (Model Context Protocol) client you are using, with no additional information.\n\nReturns:\n\n\tDetailed execution plan showing how Oracle will process the query, including operation types, object names, costs, bytes, and cardinality estimates.\n",
     inputSchema: {
       type: "object",
       properties: {
@@ -49,7 +49,7 @@ export const tools = [
   },
   {
     name: "stats",
-    description: "Stats for a given SQL object",
+    description: "Get comprehensive statistics for a specific Oracle database object (table, index, or view). This tool retrieves detailed information including row counts, block statistics, segment size, index information, column statistics, partition details, and other metadata that can help optimize queries and understand data distribution.\n\nArgs:\n\n\tname: The name of the database object to get statistics for.\n\n\nThe `model` argument should specify only the name and version of the LLM (Large Language Model) you are using, with no additional information.\nThe `mcp_client` argument should specify only the name of the MCP (Model Context Protocol) client you are using, with no additional information.\n\nReturns:\n\n\tJson-formatted object statistics including row counts, block usage, size information, indexes, partitions, and column details with histograms and data distribution metrics.\n",
     inputSchema: {
       type: "object",
       properties: {
@@ -98,7 +98,7 @@ export const tools = [
   },
   {
     name: "awr",
-    description: "Generate an AWR report or AWR SQL report. Optional parameter: sql_id.",
+    description: "Generate an Automatic Workload Repository (AWR) report or AWR SQL report for Oracle database performance analysis. AWR reports provide comprehensive performance metrics including database statistics, wait events, top SQL statements, system resources, and performance recommendations.\n\nIf no sql_id is provided, generates a full AWR database report with:\n- Database instance information and configuration\n- Load profile and instance efficiency metrics\n- Top wait events and time model statistics\n- SQL statistics ordered by various metrics (elapsed time, CPU time, executions, etc.)\n- Segment statistics and I/O statistics\n- Memory and SGA statistics\n- System and session statistics\n\nIf a sql_id is provided, generates an AWR SQL report focused on that specific SQL statement with:\n- SQL text and execution statistics\n- Execution plans and plan history\n- Bind variable information\n- Wait events specific to the SQL\n- Performance metrics over time\n\nArgs:\n\n\tsql_id (optional): The SQL ID for generating an AWR SQL report. If omitted, generates a full AWR database report.\n\nReturns:\n\n\tComprehensive performance report in text or HTML format with actionable insights for database tuning and optimization.\n",
     inputSchema: {
       type: "object",
       properties: {

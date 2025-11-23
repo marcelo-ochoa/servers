@@ -2,20 +2,29 @@ import { CallToolRequest } from "@modelcontextprotocol/sdk/types.js";
 import { initializePool, closePool } from "../db.js";
 
 export const connectHandler = async (request: CallToolRequest) => {
-    const connectionString = request.params.arguments?.connectionString;
+    const newConnectionString = request.params.arguments?.connectionString;
+    const newUser = request.params.arguments?.user;
+    const newPassword = request.params.arguments?.password;
 
-    if (typeof connectionString !== "string" || !connectionString) {
+    if (
+        typeof newConnectionString !== "string" || !newConnectionString ||
+        typeof newUser !== "string" || !newUser ||
+        typeof newPassword !== "string" || !newPassword
+    ) {
         return {
-            content: [{ type: "text", text: "Missing or invalid connectionString argument." }],
+            content: [{ type: "text", text: "Missing or invalid connectionString, user, or password argument." }],
             isError: true,
         };
     }
 
     try {
         await closePool();
-        await initializePool(connectionString);
+        // Override env vars for this session
+        process.env.PG_USER = newUser;
+        process.env.PG_PASSWORD = newPassword;
+        await initializePool(newConnectionString);
         return {
-            content: [{ type: "text", text: `Successfully connected to Postgres DB: ${connectionString}` }],
+            content: [{ type: "text", text: `Successfully connected to Postgres DB: ${newConnectionString} as user ${newUser}` }],
             isError: false,
         };
     } catch (err) {
@@ -25,3 +34,4 @@ export const connectHandler = async (request: CallToolRequest) => {
         };
     }
 };
+

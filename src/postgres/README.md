@@ -21,7 +21,10 @@ A Model Context Protocol server that provides read-only access to PostgreSQL dat
 
 - **pg-connect**
   - Connect to a PostgreSQL database
-  - Input: `connectionString` (string): The PostgreSQL connection string (e.g. postgresql://user:password@host:port/dbname)
+  - Inputs:
+    - `connectionString` (string): The PostgreSQL connection string without credentials (e.g. postgresql://host:port/dbname or host:port/dbname)
+    - `user` (string): The PostgreSQL username
+    - `password` (string): The PostgreSQL password
 
 - **pg-awr**
   - Generate a PostgreSQL performance report similar to Oracle AWR. Includes database statistics, top queries (requires pg_stat_statements extension), table/index statistics, connection info, and optimization recommendations.
@@ -37,14 +40,27 @@ The server provides schema information for each table in the database:
 
 ## Configuration
 
+### Authentication
+
+The PostgreSQL server uses environment variables for secure credential management:
+
+- **`PG_USER`**: PostgreSQL username (required)
+- **`PG_PASSWORD`**: PostgreSQL password (required)
+
+The connection string should contain only the host, port, and database information (without embedded credentials).
+
+**Supported connection string formats:**
+- `postgresql://host:port/dbname`
+- `host:port/dbname`
+
 ### Usage with Claude Desktop
 
 To use this server with the Claude Desktop app, add the following configuration to the "mcpServers" section of your `claude_desktop_config.json`:
 
 ### Docker
 
-* when running docker on macos, use host.docker.internal if the server is running on the host network (eg localhost)
-* username/password can be added to the postgresql url with `postgresql://user:password@host:port/db-name`
+* When running Docker on macOS, use `host.docker.internal` if the PostgreSQL server is running on the host network (e.g., localhost)
+* Credentials are passed via environment variables `PG_USER` and `PG_PASSWORD`
 
 ```json
 {
@@ -54,9 +70,12 @@ To use this server with the Claude Desktop app, add the following configuration 
       "args": [
         "run", 
         "-i", 
-        "--rm", 
+        "--rm",
+        "-e", "PG_USER=myuser",
+        "-e", "PG_PASSWORD=mypassword",
         "mochoa/mcp-postgres", 
-        "postgresql://host.docker.internal:5432/mydb"]
+        "postgresql://host.docker.internal:5432/mydb"
+      ]
     }
   }
 }
@@ -72,14 +91,23 @@ To use this server with the Claude Desktop app, add the following configuration 
       "args": [
         "-y",
         "@marcelo-ochoa/server-postgres",
-        "postgresql://localhost/mydb"
-      ]
+        "postgresql://localhost:5432/mydb"
+      ],
+      "env": {
+        "PG_USER": "myuser",
+        "PG_PASSWORD": "mypassword"
+      }
     }
   }
 }
 ```
 
 Replace `/mydb` with your database name.
+
+**Note**: Replace the following placeholders with your actual values:
+- `myuser` and `mypassword` with your PostgreSQL credentials
+- `localhost:5432` with your PostgreSQL server host and port
+- `mydb` with your database name
 
 ### Usage with VS Code
 
@@ -106,7 +134,18 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
       {
         "type": "promptString",
         "id": "pg_url",
-        "description": "PostgreSQL URL (e.g. postgresql://user:pass@host.docker.internal:5432/mydb)"
+        "description": "PostgreSQL URL (e.g. postgresql://host.docker.internal:5432/mydb)"
+      },
+      {
+        "type": "promptString",
+        "id": "pg_user",
+        "description": "PostgreSQL username"
+      },
+      {
+        "type": "promptString",
+        "id": "pg_password",
+        "description": "PostgreSQL password",
+        "password": true
       }
     ],
     "servers": {
@@ -116,6 +155,8 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
           "run",
           "-i",
           "--rm",
+          "-e", "PG_USER=${input:pg_user}",
+          "-e", "PG_PASSWORD=${input:pg_password}",
           "mochoa/mcp-postgres",
           "${input:pg_url}"
         ]
@@ -134,7 +175,18 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
       {
         "type": "promptString",
         "id": "pg_url",
-        "description": "PostgreSQL URL (e.g. postgresql://user:pass@localhost:5432/mydb)"
+        "description": "PostgreSQL URL (e.g. postgresql://localhost:5432/mydb)"
+      },
+      {
+        "type": "promptString",
+        "id": "pg_user",
+        "description": "PostgreSQL username"
+      },
+      {
+        "type": "promptString",
+        "id": "pg_password",
+        "description": "PostgreSQL password",
+        "password": true
       }
     ],
     "servers": {
@@ -144,7 +196,11 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
           "-y",
           "@marcelo-ochoa/server-postgres",
           "${input:pg_url}"
-        ]
+        ],
+        "env": {
+          "PG_USER": "${input:pg_user}",
+          "PG_PASSWORD": "${input:pg_password}"
+        }
       }
     }
   }
@@ -158,6 +214,10 @@ Docker:
 ```sh
 docker build -t mochoa/mcp-postgres -f src/postgres/Dockerfile .
 ```
+
+## Sources
+
+As usual the code of this extension is at [GitHub](https://github.com/marcelo-ochoa/servers), feel free to suggest changes and make contributions, note that I am a beginner developer of React and TypeScript so contributions to make this UI better are welcome.
 
 ## License
 
