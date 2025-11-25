@@ -38,6 +38,22 @@ The server provides schema information for each table in the database:
   - Includes column names and data types
   - Automatically discovered from database metadata
 
+## Change Log
+
+### 2025-11-22
+- **feat**: Implement secure PostgreSQL authentication via environment variables and update tool descriptions
+  - Added `PG_USER` and `PG_PASSWORD` environment variables for secure credential management
+  - Updated `pg-connect` tool to accept explicit user/password arguments
+  - Enhanced tool descriptions for better clarity and documentation
+
+### 2025-11-20
+- **feat**: Add initial Postgres server implementation, integrate ModelContextProtocol SDK, and update Oracle tools
+  - Complete refactoring of PostgreSQL MCP server
+  - Modularized code structure with separate tool handlers
+  - Implemented `pg-stats`, `pg-connect`, `pg-explain`, and `pg-awr` tools
+  - Renamed query tool to `pg-query` to avoid naming collisions
+  - Added Docker image build support for postgres service
+
 ## Configuration
 
 ### Authentication
