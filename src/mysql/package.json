@@ -1,0 +1,38 @@
+{
+    "name": "@marcelo-ochoa/server-mysql",
+    "version": "0.1.0",
+    "description": "MCP server for interacting with MySQL databases",
+    "keywords": [
+        "read-only-mcp",
+        "mysql-database",
+        "ai-agent",
+        "llm-tool",
+        "rag"
+    ],
+    "license": "MIT",
+    "author": "Marcelo Fabian Ochoa",
+    "homepage": "https://modelcontextprotocol.io",
+    "bugs": "https://github.com/marcelo-ochoa/servers/issues",
+    "type": "module",
+    "bin": {
+        "mcp-server-mysql": "dist/index.js"
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsc && shx chmod +x dist/*.js",
+        "prepare": "npm run build",
+        "watch": "tsc --watch"
+    },
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "1.0.1",
+        "@toon-format/toon": "^1.0.0",
+        "mysql2": "^3.11.5"
+    },
+    "devDependencies": {
+        "@types/node": "^22.10.1",
+        "shx": "^0.3.4",
+        "typescript": "^5.6.2"
+    }
+}

@@ -36,3 +36,11 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: mochoa/mcp-postgres:latest
+      - name: Build and push mysql
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./src/mysql/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: mochoa/mcp-mysql:latest
