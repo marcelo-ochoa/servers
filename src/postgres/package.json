@@ -1,6 +1,6 @@
 {
   "name": "@marcelo-ochoa/server-postgres",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "MCP server for interacting with PostgreSQL databases",
   "keywords": [
     "read-only-mcp",
