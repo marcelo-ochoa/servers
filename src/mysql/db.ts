@@ -59,7 +59,7 @@ export async function initializePool(connectionString: string) {
     connection.release();
 
     // Build resource base URL without credentials
-    const url = new URL(`mysql://${host}:${port}/${database}`);
+    const url = new URL(`mysql://${database}`);
     resourceBaseUrl = url;
 }
 

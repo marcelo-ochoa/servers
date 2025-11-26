@@ -33,7 +33,7 @@ A Model Context Protocol server that provides read-only access to PostgreSQL dat
 
 The server provides schema information for each table in the database:
 
-- **Table Schemas** (`postgres://<host>/<table>/schema`)
+- **Table Schemas** (`postgres://<dbname>/<table>/schema`)
   - JSON schema information for each table
   - Includes column names and data types
   - Automatically discovered from database metadata

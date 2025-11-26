@@ -36,7 +36,7 @@ A Model Context Protocol server that provides read-only access to MySQL database
 
 The server provides schema information for each table in the MySQL database:
 
-- **Table Schemas** (`mysql://host:port/database/<table>/schema`)
+- **Table Schemas** (`mysql://<database>/<table>/schema`)
   - JSON schema information for each table
   - Includes column names and data types
   - Automatically discovered from MySQL database metadata
@@ -267,6 +267,32 @@ Sample prompts to try with the MySQL MCP server:
 - Explain the execution plan for: SELECT * FROM users WHERE email = 'test@example.com'
 - Generate a performance report using mysql-awr
 - Based on the AWR report, what optimizations would you recommend?
+
+## Change Log
+
+### Recent Updates
+
+- **2025-11-25** (ca2c3fb)
+  - feat: Add new MySQL service with AWR, query, explain, and stats tools, along with updated CI/CD workflow and dependencies.
+
+- **2024-12-10** (f6f8361)
+  - removed unused files, this has been moved to its own repo
+
+- **2024-12-09** (386516c, bd0a6a9)
+  - removed unused type
+  - refactored code for better readability and maintainability
+
+- **2024-12-09** (6854953)
+  - removed index.js, should rely on the build index.js in dist/index.js
+
+- **2024-12-09** (ef0123d)
+  - Corrected type and fixed build errors
+
+- **2024-12-09** (c5a2c0f)
+  - Removed pnpm locked json file
+
+- **2024-12-09** (b3aa070)
+  - Added MCP Server for MySQL
 
 ## Sources
 

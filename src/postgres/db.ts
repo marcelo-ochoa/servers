@@ -56,7 +56,7 @@ export async function initializePool(connectionString: string) {
     client.release();
 
     // Build resource base URL without credentials
-    const url = new URL(`postgresql://${host}:${port}/${database}`);
+    const url = new URL(`postgresql://${database}`);
     resourceBaseUrl = url;
 }
 

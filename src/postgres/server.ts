@@ -45,4 +45,10 @@ export async function runServer() {
 
     const transport = new StdioServerTransport();
     await server.connect(transport);
+
+    process.stdin.on("close", () => {
+        console.error("Postgres MCP Server closed");
+        server.close();
+        process.exit(0);
+    });
 }
