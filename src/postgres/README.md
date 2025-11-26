@@ -40,6 +40,21 @@ The server provides schema information for each table in the database:
 
 ## Change Log
 
+### 2025-11-26
+- **chore**: Bump MySQL and PostgreSQL server versions to 0.1.1 and 0.6.4
+  - Updated package versions to reflect recent improvements
+  - Synchronized package-lock.json with new versions
+
+- **feat**: Simplify database resource URLs and add graceful server shutdown on stdin close
+  - Simplified resource URL format for better usability
+  - Added graceful shutdown handling for improved stability
+
+### 2025-11-25
+- **docs**: Add change logs to Oracle and Postgres READMEs
+  - Detailed new features such as secure Postgres authentication
+  - Documented Toon format encoding integration
+  - Added Antigravity Code Editor integration instructions
+
 ### 2025-11-22
 - **feat**: Implement secure PostgreSQL authentication via environment variables and update tool descriptions
   - Added `PG_USER` and `PG_PASSWORD` environment variables for secure credential management

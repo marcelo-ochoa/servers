@@ -272,27 +272,14 @@ Sample prompts to try with the MySQL MCP server:
 
 ### Recent Updates
 
+- **2025-11-26** (ca32105)
+  - chore: bump MySQL and PostgreSQL server versions to 0.1.1 and 0.6.4
+
+- **2025-11-26** (d065d11)
+  - feat: Simplify database resource URLs and add graceful server shutdown on stdin close
+
 - **2025-11-25** (ca2c3fb)
-  - feat: Add new MySQL service with AWR, query, explain, and stats tools, along with updated CI/CD workflow and dependencies.
-
-- **2024-12-10** (f6f8361)
-  - removed unused files, this has been moved to its own repo
-
-- **2024-12-09** (386516c, bd0a6a9)
-  - removed unused type
-  - refactored code for better readability and maintainability
-
-- **2024-12-09** (6854953)
-  - removed index.js, should rely on the build index.js in dist/index.js
-
-- **2024-12-09** (ef0123d)
-  - Corrected type and fixed build errors
-
-- **2024-12-09** (c5a2c0f)
-  - Removed pnpm locked json file
-
-- **2024-12-09** (b3aa070)
-  - Added MCP Server for MySQL
+  - feat: Add new MySQL service with AWR, query, explain, and stats tools, along with updated CI/CD workflow and dependencies
 
 ## Sources
 
