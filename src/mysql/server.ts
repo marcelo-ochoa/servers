@@ -3,6 +3,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import {
     CallToolRequestSchema,
     ListResourcesRequestSchema,
+    ListResourceTemplatesRequestSchema,
     ListToolsRequestSchema,
     ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
@@ -13,7 +14,7 @@ import { tools } from "./tools.js";
 const server = new Server(
     {
         name: "mysql-server",
-        version: "0.1.2",
+        version: "0.1.3",
     },
     {
         capabilities: {
@@ -22,6 +23,18 @@ const server = new Server(
         },
     },
 );
+
+server.setRequestHandler(ListResourceTemplatesRequestSchema, async () => {
+    return {
+        resourceTemplates: [
+            {
+                uriTemplate: "mysql://{database}/{table_name}/schema",
+                name: "Table Schema",
+                description: "Schema information for a MySQL database table including column names and data types",
+            },
+        ],
+    };
+});
 
 server.setRequestHandler(ListResourcesRequestSchema, listResourcesHandler);
 server.setRequestHandler(ReadResourceRequestSchema, readResourceHandler);

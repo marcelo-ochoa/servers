@@ -15,11 +15,12 @@ export async function initializePool(connectionString: string) {
         process.exit(1);
     }
 
-    // Parse the connection string to extract host, port, and database
-    // Expected format: mysql://host:port/dbname or host:port/dbname
+    // Parse the connection string to extract host, port, database, and options
+    // Expected format: mysql://host:port/dbname?options or host:port/dbname?options
     let host: string;
     let port: number;
     let database: string;
+    let connectionOptions: Record<string, any> = {};
 
     try {
         // Try parsing as URL first
@@ -28,19 +29,62 @@ export async function initializePool(connectionString: string) {
             host = url.hostname;
             port = url.port ? parseInt(url.port) : 3306;
             database = url.pathname.slice(1); // Remove leading '/'
+
+            // Parse query parameters for connection options
+            url.searchParams.forEach((value, key) => {
+                // Convert string values to appropriate types
+                if (value === 'true' || value === 'false') {
+                    connectionOptions[key] = value === 'true';
+                } else if (!isNaN(Number(value))) {
+                    connectionOptions[key] = Number(value);
+                } else {
+                    connectionOptions[key] = value;
+                }
+            });
         } else {
-            // Parse format: host:port/dbname
-            const match = connectionString.match(/^([^:]+):(\d+)\/(.+)$/);
+            // Parse format: host:port/dbname or host:port/dbname?options
+            const [baseConnection, queryString] = connectionString.split('?');
+            const match = baseConnection.match(/^([^:]+):(\d+)\/(.+)$/);
             if (!match) {
-                throw new Error("Invalid connection string format. Expected: host:port/dbname or mysql://host:port/dbname");
+                throw new Error("Invalid connection string format. Expected: host:port/dbname?options or mysql://host:port/dbname?options");
             }
             host = match[1];
             port = parseInt(match[2]);
             database = match[3];
+
+            // Parse query string if present
+            if (queryString) {
+                const params = new URLSearchParams(queryString);
+                params.forEach((value, key) => {
+                    // Convert string values to appropriate types
+                    if (value === 'true' || value === 'false') {
+                        connectionOptions[key] = value === 'true';
+                    } else if (!isNaN(Number(value))) {
+                        connectionOptions[key] = Number(value);
+                    } else {
+                        connectionOptions[key] = value;
+                    }
+                });
+            }
         }
     } catch (err) {
         console.error("Error parsing connection string:", err);
         process.exit(1);
+    }
+
+    // Handle special SSL option conversion
+    // ssl=0 or ssl=false means disable SSL
+    // ssl=1 or ssl=true means enable SSL with default settings (accepting self-signed certs)
+    if ('ssl' in connectionOptions) {
+        if (connectionOptions.ssl === 0 || connectionOptions.ssl === false) {
+            connectionOptions.ssl = false;
+        } else if (connectionOptions.ssl === 1 || connectionOptions.ssl === true) {
+            // MySQL2 requires ssl to be an object, not a boolean
+            connectionOptions.ssl = {
+                rejectUnauthorized: false // Accept self-signed certificates
+            };
+        }
+        // If ssl is already an object or string (like a path), keep it as is
     }
 
     pool = mysql.createPool({
@@ -52,6 +96,7 @@ export async function initializePool(connectionString: string) {
         waitForConnections: true,
         connectionLimit: 10,
         queueLimit: 0,
+        ...connectionOptions, // Spread connection options from URL
     });
 
     // Test connection

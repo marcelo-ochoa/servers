@@ -3,6 +3,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import {
   CallToolRequestSchema,
   ListResourcesRequestSchema,
+  ListResourceTemplatesRequestSchema,
   ListToolsRequestSchema,
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
@@ -14,7 +15,7 @@ import { tools } from "./tools.js";
 const server = new Server(
   {
     name: "oracle-server",
-    version: "0.7.5",
+    version: "0.7.6",
   },
   {
     capabilities: {
@@ -41,6 +42,18 @@ const PromptsListRequestSchema = z.object({
 server.setRequestHandler(PromptsListRequestSchema, async () => {
   return {
     prompts,
+  };
+});
+
+server.setRequestHandler(ListResourceTemplatesRequestSchema, async () => {
+  return {
+    resourceTemplates: [
+      {
+        uriTemplate: "oracle://{user}/{table_name}/schema",
+        name: "Table Schema",
+        description: "Schema information for an Oracle database table including column names and data types",
+      },
+    ],
   };
 });
 
