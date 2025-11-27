@@ -1,6 +1,7 @@
 {
     "name": "@marcelo-ochoa/server-mysql",
-    "version": "0.1.1",
+    "mcpName": "io.github.marcelo-ochoa/mysql",
+    "version": "0.1.2",
     "description": "MCP server for interacting with MySQL databases",
     "keywords": [
         "read-only-mcp",

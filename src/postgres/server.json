@@ -1,0 +1,37 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+  "name": "io.github.marcelo-ochoa/postgres",
+  "description": "MCP server for interacting with PostgreSQL databases",
+  "repository": {
+    "url": "https://github.com/marcelo-ochoa/servers",
+    "source": "github",
+    "subfolder": "src/postgres"
+  },
+  "version": "0.6.5",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@marcelo-ochoa/server-postgres",
+      "version": "0.6.5",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "description": "PostgreSQL user",
+          "isRequired": true,
+          "format": "string",
+          "isSecret": true,
+          "name": "POSTGRES_USER"
+        },
+        {
+          "description": "PostgreSQL password",
+          "isRequired": true,
+          "format": "string",
+          "isSecret": true,
+          "name": "POSTGRES_PASSWORD"
+        }
+      ]
+    }
+  ]
+}

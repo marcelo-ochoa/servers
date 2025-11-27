@@ -13,7 +13,7 @@ import { tools } from "./tools.js";
 const server = new Server(
     {
         name: "postgres-server",
-        version: "0.6.4",
+        version: "0.6.5",
     },
     {
         capabilities: {
