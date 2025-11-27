@@ -7,12 +7,12 @@
     "source": "github",
     "subfolder": "src/oracle"
   },
-  "version": "0.7.5",
+  "version": "0.7.6",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@marcelo-ochoa/server-oracle",
-      "version": "0.7.5",
+      "version": "0.7.6",
       "transport": {
         "type": "stdio"
       },
