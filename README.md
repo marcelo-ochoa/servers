@@ -2,6 +2,9 @@
 
 This repository is a collection of *reference implementations* for the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), as well as references to community-built servers and additional resources.
 
+> [!IMPORTANT]
+> If you are looking for a list of MCP servers, you can browse published servers on [the MCP Registry](https://registry.modelcontextprotocol.io/). The repository served by this README is dedicated to housing just the small number of reference servers maintained by the MCP steering group.
+
 The servers in this repository showcase the versatility and extensibility of MCP, demonstrating how it can be used to give Large Language Models (LLMs) secure, controlled access to tools and data sources.
 Typically, each MCP server is implemented with an MCP SDK:
 
@@ -15,9 +18,6 @@ Typically, each MCP server is implemented with an MCP SDK:
 - [Rust MCP SDK](https://github.com/modelcontextprotocol/rust-sdk)
 - [Swift MCP SDK](https://github.com/modelcontextprotocol/swift-sdk)
 - [TypeScript MCP SDK](https://github.com/modelcontextprotocol/typescript-sdk)
-
-> [!NOTE]
-> Lists in this README are maintained in alphabetical order to minimize merge conflicts when adding new items.
 
 ## 🌟 Reference Servers
 
@@ -50,6 +50,9 @@ The following reference servers are now archived and can be found at [servers-ar
 - **[SQLite](https://github.com/modelcontextprotocol/servers-archived/tree/main/src/sqlite)** - Database interaction and business intelligence capabilities.
 
 ## 🤝 Third-Party Servers
+
+> [!NOTE]
+The server lists in this README are no longer maintained and will eventually be removed.
 
 ### 🎖️ Official Integrations
 
@@ -100,6 +103,7 @@ Official integrations are maintained by companies building production ready MCP 
 - <img height="12" width="12" src="https://assets.atlan.com/assets/atlan-a-logo-blue-background.png" alt="Atlan Logo" /> **[Atlan](https://github.com/atlanhq/agent-toolkit/tree/main/modelcontextprotocol)** - The Atlan Model Context Protocol server allows you to interact with the [Atlan](https://www.atlan.com/) services through multiple tools.
 - <img height="12" width="12" src="https://www.atlassian.com/favicon.ico" alt="Atlassian Logo" /> **[Atlassian](https://www.atlassian.com/platform/remote-mcp-server)** - Securely interact with Jira work items and Confluence pages, and search across both.
 - <img height="12" width="12" src="https://res.oafimg.cn/-/737b3b3ffed9b19e/logo.png" alt="AtomGit Logo" /> **[AtomGit](https://atomgit.com/atomgit-open-source-ecosystem/atomgit-mcp-server)** - Official AtomGit server for integration with repository management, PRs, issues, branches, labels, and more.
+- <img height="12" width="12" src="https://atono.io/favicon.ico" alt="Atono Logo" /> **[Atono](https://docs.atono.io/docs/mcp-server-for-atono/)** - Modern product teams connect their AI assistant to Atono to create and update stories, bugs, assignments and fixes.
 - <img height="12" width="12" src="https://resources.audiense.com/hubfs/favicon-1.png" alt="Audiense Logo" /> **[Audiense Insights](https://github.com/AudienseCo/mcp-audiense-insights)** - Marketing insights and audience analysis from [Audiense](https://www.audiense.com/products/audiense-insights) reports, covering demographic, cultural, influencer, and content engagement analysis.
 - <img height="12" width="12" src="https://cdn.auth0.com/website/website/favicons/auth0-favicon.svg" alt="Auth0 Logo" /> **[Auth0](https://github.com/auth0/auth0-mcp-server)** - MCP server for interacting with your Auth0 tenant, supporting creating and modifying actions, applications, forms, logs, resource servers, and more.
 - <img height="12" width="12" src="https://firstorder.ai/favicon_auth.ico" alt="Authenticator App Logo" /> **[Authenticator App · 2FA](https://github.com/firstorderai/authenticator_mcp)** - A secure MCP (Model Context Protocol) server that enables AI agents to interact with the Authenticator App.
@@ -516,10 +520,12 @@ Official integrations are maintained by companies building production ready MCP 
 - <img height="12" width="12" src="https://images.thetradeagent.ai/trade_agent/logo.svg" alt="Trade Agent Logo" /> **[Trade Agent](https://github.com/Trade-Agent/trade-agent-mcp)** - Execute stock and crypto trades on your brokerage via [Trade Agent](https://thetradeagent.ai)
 - <img height="18" width="18" src="https://github.com/twelvedata/mcp/raw/develop/favicon.ico" alt="Twelvedata Logo" /> **[Twelve Data](https://github.com/twelvedata/mcp)** — Integrate your AI agents with real-time and historical financial market data through our official [Twelve Data](https://twelvedata.com) MCP server.
 - <img height="12" width="12" src="https://www.twilio.com/content/dam/twilio-com/core-assets/social/favicon-16x16.png" alt="Twilio Logo" /> **[Twilio](https://github.com/twilio-labs/mcp)** - Interact with [Twilio](https://www.twilio.com/en-us) APIs to send SMS messages, manage phone numbers, configure your account, and more.
+- <img height="12" width="12" src="https://miniprogram.tcsas-superapp.com/icon_512.png" alt="TCSAS Logo" /> **[TCSAS](https://github.com/TCMPP-Team/tcsas-devtools-mcp-server)** - Built on the Tencent Mini Program technical framework and fully following the development, powered by [Tencent Cloud Super App as a Service](https://www.tencentcloud.com/products/tcsas?lang=en&pg=).
 - <img height="12" width="12" src="https://uberall.com/media/favicon.svg" alt="Uberall Logo" /> **[Uberall](https://github.com/uberall/uberall-mcp-server)** – Manage multi - location presence, including listings, reviews, and social posting, via [uberall](https://uberall.com).
 - <img height="12" width="12" src="https://avatars.githubusercontent.com/u/91906527" alt="Unblocked Logo" /> **[Unblocked](https://docs.getunblocked.com/unblocked-mcp)** Help your AI-powered IDEs generate faster, more accurate code by giving them access to context from Slack, Confluence, Google Docs, JIRA, and more with [Unblocked](https://getunblocked.com).
 - <img height="12" width="12" src="https://unifai.network/favicon.ico" alt="UnifAI Logo" /> **[UnifAI](https://github.com/unifai-network/unifai-mcp-server)** - Dynamically search and call tools using [UnifAI Network](https://unifai.network)
 - <img height="12" width="12" src="https://framerusercontent.com/images/plcQevjrOYnyriuGw90NfQBPoQ.jpg" alt="Unstructured Logo" /> **[Unstructured](https://github.com/Unstructured-IO/UNS-MCP)** - Set up and interact with your unstructured data processing workflows in [Unstructured Platform](https://unstructured.io)
+- <img height="12" width="12" src="https://uno-assets.platform.uno/logos/PNG/Uno_Platform_Symbol_RW.png" alt="Uno Platform Logo" /> **[Uno Platform](https://platform.uno/)** - Connects agents and developers to [Uno Platform's](https://aka.platform.uno/mcp) knowledge base - docs, APIs, and best practices allowing for building cross-platform .NET applications.
 - <img height="12" width="12" src="https://upstash.com/icons/favicon-32x32.png" alt="Upstash Logo" /> **[Upstash](https://github.com/upstash/mcp-server)** - Manage Redis databases and run Redis commands on [Upstash](https://upstash.com/) with natural language.
 - <img height="12" width="12" src="https://raw.githubusercontent.com/e2e-test-quest/uuv/refs/heads/main/uuv.ico" alt="UUV Logo" /> **[UUV](https://github.com/e2e-test-quest/uuv/tree/main/packages/mcp-server)** - Generate human readable end to end tests with [UUV](https://e2e-test-quest.github.io/uuv/).
 - <img height="12" width="12" src="http://vaadin.com/favicon.ico" alt="Vaadin Logo" /> **[Vaadin](https://github.com/marcushellberg/vaadin-documentation-services)** - Search Vaadin documentation, get the full documentation, and get version information. Designed for AI agents.
@@ -557,6 +563,7 @@ Official integrations are maintained by companies building production ready MCP 
 - **[ZettelkastenSpace](https://github.com/joshylchen/zettelkasten_space)** - Built on the proven [Zettelkasten](https://www.zettelkasten.space/) method, enhanced with Claude Desktop integration via Model Context Protocol 
 - <img height="12" width="12" src="https://www.zine.ai/images/zine-logo.png" alt="Zine Logo" /> **[Zine](https://www.zine.ai)** - Your memory, everywhere AI goes. Think iPhoto for your knowledge - upload and curate. Like ChatGPT but portable - context that travels with you.
 - <img height="12" width="12" src="https://zizai.work/images/logo.jpg" alt="ZIZAI Logo" /> **[ZIZAI Recruitment](https://github.com/zaiwork/mcp)** - Interact with the next-generation intelligent recruitment platform for employees and employers, powered by [ZIZAI Recruitment](https://zizai.work).
+
 ### 🌎 Community Servers
 
 A growing set of community-developed and maintained servers demonstrates various applications of MCP across different domains.
@@ -579,6 +586,7 @@ A growing set of community-developed and maintained servers demonstrates various
 - **[Agentic Framework](https://github.com/Piotr1215/mcp-agentic-framework)** - Multi-agent collaboration framework enabling AI agents to register, discover each other, exchange asynchronous messages via HTTP transport, and work together on complex tasks with persistent message history.
 - **[AgentMode](https://www.agentmode.app)** - Connect to dozens of databases, data warehouses, Github & more, from a single MCP server.  Run the Docker image locally, in the cloud, or on-premise.
 - **[AI Agent Marketplace Index](https://github.com/AI-Agent-Hub/ai-agent-marketplace-index-mcp)** - MCP server to search more than 5000+ AI agents and tools of various categories from [AI Agent Marketplace Index](http://www.deepnlp.org/store/ai-agent) and monitor traffic of AI Agents.
+- **[AI Endurance](https://github.com/ai-endurance/mcp)** - AI-powered training platform for runners, cyclists, and triathletes with over 20 tools for workout management, activity analysis, performance predictions, and recovery tracking.
 - **[AI Tasks](https://github.com/jbrinkman/valkey-ai-tasks)** - Let the AI manage complex plans with integrated task management and tracking tools. Supports STDIO, SSE and Streamable HTTP transports.
 - **[ai-Bible](https://github.com/AdbC99/ai-bible)** - Search the bible reliably and repeatably [ai-Bible Labs](https://ai-bible.com)
 - **[Airbnb](https://github.com/openbnb-org/mcp-server-airbnb)** - Provides tools to search Airbnb and get listing details.
@@ -862,6 +870,7 @@ A growing set of community-developed and maintained servers demonstrates various
 - **[Goodnews](https://github.com/VectorInstitute/mcp-goodnews)** - A simple MCP server that delivers curated positive and uplifting news stories.
 - **[Google Ads](https://github.com/gomarble-ai/google-ads-mcp-server)** - MCP server acting as an interface to the Google Ads, enabling programmatic access to Facebook Ads data and management features.
 - **[Google Analytics](https://github.com/surendranb/google-analytics-mcp)** - Google Analytics MCP Server to bring data across 200+ dimensions & metrics for LLMs to analyse.
+- **[Google Analytics 4](https://github.com/gomakers-ai/mcp-google-analytics)** - MCP server for Google Analytics Data API and Measurement Protocol to read reports and send events.
 - **[Google Calendar](https://github.com/v-3/google-calendar)** - Integration with Google Calendar to check schedules, find time, and add/delete events
 - **[Google Calendar](https://github.com/nspady/google-calendar-mcp)** - Google Calendar MCP Server for managing Google calendar events. Also supports searching for events by attributes like title and location.
 - **[Google Custom Search](https://github.com/adenot/mcp-google-search)** - Provides Google Search results via the Google Custom Search API
@@ -1388,6 +1397,7 @@ search, and comprehensive file analysis.
 - **[USA Spending MCP Server](https://github.com/thsmale/usaspending-mcp-server)** – This leverages the official source of government spending data [USASPENDING.gov](https://www.usaspending.gov/). Which enables one to track government spending over time, search government spending by agency, explore government spending to communities, and much more.
 - **[use_aws_mcp](https://github.com/runjivu/use_aws_mcp)** - amazon-q-cli's use_aws tool extracted into independent mcp, for general aws api usage.
 - **[User Feedback](https://github.com/mrexodia/user-feedback-mcp)** - Simple MCP Server to enable a human-in-the-loop workflow in tools like Cline and Cursor.
+- **[Useless Toolkit](https://uselesstoolkit.com/apis/mcp-servers)** - MCP-ready server endpoints for utility APIs, including Password Generator, IP2Geo etc., are provided by UselessToolkit.com, allowing seamless integration with AI agents via secure RapidAPI connections.
 - **[USPTO](https://github.com/riemannzeta/patent_mcp_server)** - MCP server for accessing United States Patent & Trademark Office data through its Open Data Protocol (ODP) API.
 - **[Vectara](https://github.com/vectara/vectara-mcp)** - Query Vectara's trusted RAG-as-a-service platform.
 - **[Vega-Lite](https://github.com/isaacwasserman/mcp-vegalite-server)** - Generate visualizations from fetched data using the VegaLite format and renderer.
