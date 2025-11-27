@@ -42,6 +42,24 @@ The server provides schema information for each table in the Oracle Database cur
 
 ## Change Log
 
+### 2025-11-27
+- **feat**: Add `server.json` to define Oracle MCP server, environment variables, and update related configurations
+  - Added server.json with MCP server metadata and schema
+  - Updated version to 0.7.5
+  - Added mcpName field to package.json
+  - Configured environment variables (ORACLE_USER, ORACLE_PASSWORD) in server definition
+
+### 2025-11-25
+- **docs**: Add change logs to Oracle and Postgres READMEs
+  - Detailed new features such as secure Postgres authentication
+  - Documented Toon format encoding integration
+  - Added Antigravity Code Editor integration instructions
+
+### 2025-11-20
+- **feat**: Add Docker image build for postgres service and remove oracle test script
+- **feat**: Add initial Postgres server implementation, integrate ModelContextProtocol SDK, and update Oracle tools
+  - Enhanced Oracle tools integration with new MCP SDK features
+
 ### 2025-11-19
 - **feat**: Encode query and explain plan results using Toon format and add MIME type to stats output
   - Improved data serialization using `toon-format` library for better JSON handling
