@@ -102,8 +102,8 @@ To use this server with the Claude Desktop app, add the following configuration 
 
 ### Docker
 
-* when running docker on macOS, use host.docker.internal if the server is running on the host network (eg localhost)
-* username/password must be passed as environment variables
+* when running docker on macOS, use `host.docker.internal` if the server is running on the host network (eg localhost)
+* Credentials are passed via environment variables `ORACLE_USER` and `ORACLE_PASSWORD`
 
 ```json
 {
