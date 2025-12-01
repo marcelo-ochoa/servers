@@ -1,5 +1,29 @@
 ## Change Log
 
+### 2025-12-01
+- **feat**: Bump server version to 1.0.0
+  - Updated version to 1.0.0 across package.json, server.json, and server.ts
+  - Added AWR_example.md with comprehensive AWR report analysis
+  - Added CHANGELOG.md for better change tracking
+  - Renamed tools to use `orcl-` prefix for consistency (orcl-query, orcl-explain, orcl-stats, orcl-connect, orcl-awr)
+  - Updated handlers and server prompts to reflect new tool names
+  - Enhanced README with Oracle AWR in action section
+
+### 2025-11-27
+- **chore**: Bump patch version in server.json
+  - Minor version update for server configuration
+
+- **feat**: Add `ListResourceTemplates` handler to Oracle server
+  - Enhanced server capabilities with resource template listing
+  - Updated package dependencies
+
+- **feat**: Add `server.json` to define Oracle MCP server, environment variables, and update related configurations
+  - Added server.json with MCP server metadata and schema
+  - Updated version to 0.7.5
+  - Added mcpName field to package.json
+  - Configured environment variables (ORACLE_USER, ORACLE_PASSWORD) in server definition
+  - Updated .gitignore for better file management
+
 ### 2025-11-27
 - **feat**: Add `server.json` to define Oracle MCP server, environment variables, and update related configurations
   - Added server.json with MCP server metadata and schema
