@@ -42,7 +42,7 @@ The server provides schema information for each table in the Oracle Database cur
 
 ## Change Log
 
-See [Change Log](CHANGELOG.md) for the history of changes.
+See [Change Log](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/CHANGELOG.md) for the history of changes.
 
 ## Usage with Claude Desktop
 
@@ -290,7 +290,7 @@ Put this in `~/.gemini/antigravity/mcp_config.json`
 
 ## Oracle AWR in action
 
-See [Oracle AWR in action](AWR_example.md) for an example of an AWR report generated using the `orcl-awr` tool, followed by an analysis of the top SQL statements.
+See [Oracle AWR in action](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/AWR_example.md) for an example of an AWR report generated using the `orcl-awr` tool, followed by an analysis of the top SQL statements.
 
 
 ## Building
