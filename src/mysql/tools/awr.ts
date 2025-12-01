@@ -8,6 +8,8 @@ export const awrHandler = async (request: CallToolRequest) => {
                 timestamp: new Date().toISOString(),
                 database_statistics: {},
                 top_queries: [],
+                top_queries_by_cpu: [],
+                top_queries_by_io: [],
                 table_statistics: [],
                 index_statistics: [],
                 connection_info: {},
@@ -59,7 +61,7 @@ export const awrHandler = async (request: CallToolRequest) => {
             // 3. Top queries from performance_schema (if available)
             if (hasPerfSchema) {
                 try {
-                    const [topQueries] = await connection.query(`
+                    const baseQuery = `
                         SELECT 
                             DIGEST_TEXT as query_text,
                             COUNT_STAR as exec_count,
@@ -79,15 +81,42 @@ export const awrHandler = async (request: CallToolRequest) => {
                             SUM_NO_GOOD_INDEX_USED as no_good_index_used
                         FROM performance_schema.events_statements_summary_by_digest
                         WHERE SCHEMA_NAME = DATABASE()
+                        AND DIGEST_TEXT NOT LIKE '%performance_schema%'
+                        AND DIGEST_TEXT NOT LIKE '%information_schema%'
+                    `;
+
+                    // Top by Total Time
+                    const [topQueries] = await connection.query(`
+                        ${baseQuery}
                         ORDER BY SUM_TIMER_WAIT DESC
                         LIMIT 20
                     `);
                     report.top_queries = topQueries;
+
+                    // Top by CPU (Rows Examined)
+                    const [topCpuQueries] = await connection.query(`
+                        ${baseQuery}
+                        ORDER BY SUM_ROWS_EXAMINED DESC
+                        LIMIT 5
+                    `);
+                    report.top_queries_by_cpu = topCpuQueries;
+
+                    // Top by IO (Disk Temp Tables)
+                    const [topIoQueries] = await connection.query(`
+                        ${baseQuery}
+                        ORDER BY SUM_CREATED_TMP_DISK_TABLES DESC
+                        LIMIT 5
+                    `);
+                    report.top_queries_by_io = topIoQueries;
+
                 } catch (error: any) {
                     report.top_queries_note = `Performance schema is enabled but query stats unavailable: ${error.message}`;
                 }
             } else {
-                report.top_queries_note = "Performance schema is not enabled. Set performance_schema=ON in my.cnf and restart MySQL.";
+                const note = "Performance schema is not enabled. Set performance_schema=ON in my.cnf and restart MySQL.";
+                report.top_queries_note = note;
+                report.top_queries_by_cpu_note = note;
+                report.top_queries_by_io_note = note;
             }
 
             // 4. Table statistics

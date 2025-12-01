@@ -1,7 +1,7 @@
 {
   "name": "@marcelo-ochoa/server-oracle",
   "mcpName": "io.github.marcelo-ochoa/oracle",
-  "version": "0.7.6",
+  "version": "1.0.0",
   "description": "MCP server for interacting with Oracle databases",
   "keywords": [
     "read-only-mcp",

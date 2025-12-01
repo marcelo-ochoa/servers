@@ -7,12 +7,12 @@
     "source": "github",
     "subfolder": "src/postgres"
   },
-  "version": "0.6.6",
+  "version": "1.0.0",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@marcelo-ochoa/server-postgres",
-      "version": "0.6.6",
+      "version": "1.0.0",
       "transport": {
         "type": "stdio"
       },

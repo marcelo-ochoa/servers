@@ -14,7 +14,7 @@ import { tools } from "./tools.js";
 const server = new Server(
     {
         name: "mysql-server",
-        version: "0.1.3",
+        version: "1.0.0",
     },
     {
         capabilities: {

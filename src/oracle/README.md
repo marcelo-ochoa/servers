@@ -6,28 +6,28 @@ A Model Context Protocol server that provides read-only access to Oracle Databas
 
 ### Tools
 
-- **query**
+- **orcl-query**
   - Execute read-only SQL queries against the connected Oracle Database
   - Input: `sql` (string): The SQL query to execute
   - All queries are executed within a READ ONLY transaction
 
-- **explain**
+- **orcl-explain**
   - Explain plan SQL queries against the connected Oracle Database
   - Input: `sql` (string): The SQL query to execute
   - Requires GRANT SELECT_CATALOG_ROLE TO your_user;
 
-- **stats**
+- **orcl-stats**
   - Get statistics for a given table on current connected schema
   - Input: `name` (string): The table name
   - Table owner is equal to USER SQL function returning value
 
-- **connect**
+- **orcl-connect**
   - Reconnect using new credentials
   - Input: `connectionString` (string): SQLNet connect string for example host.docker.internal:1521/freepdb1
   - Input: `user` (string): Username for example scott
   - Input: `password` (string): Password, for example tiger
 
-- **awr**
+- **orcl-awr**
   - Automatic Workload Repository (AWR) with optional sql_id, requires SELECT_CATALOG_ROLE and grant execute on DBMS_WORKLOAD_REPOSITORY package
   - Input: `sql_id` (string): (optional) SQL id to get the AWR report for an specific query, if null full last generated AWR report
 
@@ -42,77 +42,7 @@ The server provides schema information for each table in the Oracle Database cur
 
 ## Change Log
 
-### 2025-11-27
-- **feat**: Add `server.json` to define Oracle MCP server, environment variables, and update related configurations
-  - Added server.json with MCP server metadata and schema
-  - Updated version to 0.7.5
-  - Added mcpName field to package.json
-  - Configured environment variables (ORACLE_USER, ORACLE_PASSWORD) in server definition
-
-### 2025-11-25
-- **docs**: Add change logs to Oracle and Postgres READMEs
-  - Detailed new features such as secure Postgres authentication
-  - Documented Toon format encoding integration
-  - Added Antigravity Code Editor integration instructions
-
-### 2025-11-20
-- **feat**: Add Docker image build for postgres service and remove oracle test script
-- **feat**: Add initial Postgres server implementation, integrate ModelContextProtocol SDK, and update Oracle tools
-  - Enhanced Oracle tools integration with new MCP SDK features
-
-### 2025-11-19
-- **feat**: Encode query and explain plan results using Toon format and add MIME type to stats output
-  - Improved data serialization using `toon-format` library for better JSON handling
-  - Added MIME type support for stats output
-- **docs**: Add instruction for `mcp_config.json` placement in README
-  - Clarified configuration file location for Antigravity Code Editor
-- **feat**: Add Antigravity Code Editor section to README with image and configuration example
-  - Added comprehensive setup instructions for Antigravity integration
-
-### 2025-11-05
-- **docs**: Set Oracle MCP server link
-
-### 2025-11-04
-- **docs**: Added article about AI pair programming
-
-### 2025-10-30
-- **feat**: Added keywords and Gemini Code Assist setting
-- **fix**: Fix dependencies
-- **docs**: Update README with Gemini CLI prompts demo
-- **release**: New release with better tools information
-
-### 2025-07-02
-- **chore**: Update version to 0.7.0 and enhance AWR documentation in Oracle server
-
-### 2025-07-01
-- **chore**: Update version to 0.6.4 and add AWR functionality in Oracle server
-  - Implemented Automatic Workload Repository (AWR) report generation
-
-### 2025-06-17
-- **feat**: Update Oracle server package name and instructions for clarity
-
-### 2025-06-13
-- **fix**: Correct README and Dockerfile for consistency and clarity
-
-### 2025-06-09
-- **feat**: Update Oracle README and configuration for improved clarity and functionality
-
-### 2025-03-20
-- **docs**: Correct typo in README and update Docker configuration for local usage
-
-### 2025-03-19
-- **docs**: Update README to include stats retrieval and improved execution plan visualization
-- **docs**: Update README to include stats functionality and sample Docker configuration
-- **feat**: Add stats endpoint for SQL object and update README with Docker AI usage
-  - Implemented comprehensive table statistics retrieval
-
-### 2025-03-14
-- **docs**: Update README with explain functionality and demo prompts for Oracle MCP server
-
-### 2025-03-13
-- **refactor**: Remove inactivity timer and enhance server shutdown handling
-- **feat**: Add Oracle MCP server with Docker support and configuration
-  - Initial release of Oracle MCP server
+See [Change Log](CHANGELOG.md) for the history of changes.
 
 ## Usage with Claude Desktop
 
@@ -171,17 +101,17 @@ Replace `/freepdb1` with your database name.
 Sample prompts using the Oracle Database sample HR schema and 
 [Oracle Database 23ai Free embedded database - Faststart - Docker Desktop Extension](https://open.docker.com/extensions/marketplace?extensionId=mochoa/oraclefree-docker-extension) .
 
-- connect to host.docker.internal:1521/freepdb1 using hr as user and hr_2025 as password using oracle mcp server
-- query SELECT COUNTRY_NAME, CITY, COUNT(DEPARTMENT_ID)
+- orcl-connect to host.docker.internal:1521/freepdb1 using hr as user and hr_2025 as password using oracle mcp server
+- orcl-query SELECT COUNTRY_NAME, CITY, COUNT(DEPARTMENT_ID)
 FROM COUNTRIES JOIN LOCATIONS USING (COUNTRY_ID) JOIN DEPARTMENTS USING (LOCATION_ID)
 WHERE DEPARTMENT_ID IN
-  (SELECT DEPARTMENT_ID FROM EMPLOYEES
-   GROUP BY DEPARTMENT_ID
-   HAVING COUNT(DEPARTMENT_ID)>5)
+ (SELECT DEPARTMENT_ID FROM EMPLOYEES
+  GROUP BY DEPARTMENT_ID
+  HAVING COUNT(DEPARTMENT_ID)>5)
 GROUP BY COUNTRY_NAME, CITY
-- explain the execution plan
+- orcl-explain the execution plan
 - visualize above execution plan in text mode
-- get stats of COUNTRIES, LOCATIONS and DEPARTMENTS
+- orcl-stats of COUNTRIES, LOCATIONS and DEPARTMENTS
 - based on above table and index stats rewrite above query with a better execution plan
 - visualize original and rewritten execution plan
 
@@ -304,7 +234,7 @@ Using this sample settings.json file at ~/.gemini/ directory:
 - connect to host.docker.internal:1521/freepdb1 using hr as user and hr_2025 as password using oracle mcp server
   ![connect](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/gemini-cli-connect.png?raw=true)
 
-- query SELECT COUNTRY_NAME, CITY, COUNT(DEPARTMENT_ID)
+- orcl-query SELECT COUNTRY_NAME, CITY, COUNT(DEPARTMENT_ID)
   FROM COUNTRIES JOIN LOCATIONS USING (COUNTRY_ID) JOIN DEPARTMENTS USING (LOCATION_ID)
   WHERE DEPARTMENT_ID IN
     (SELECT DEPARTMENT_ID FROM EMPLOYEES
@@ -313,14 +243,14 @@ Using this sample settings.json file at ~/.gemini/ directory:
   GROUP BY COUNTRY_NAME, CITY
   ![query](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/gemini-cli-query.png?raw=true)
 
-- explain the execution plan
+- orcl-explain the execution plan
   ![explain top](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/gemini-cli-explain-1.png?raw=true)
   ![explain botton](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/gemini-cli-explain-2.png?raw=true)
 
 - visualize above execution plan in text mode
   ![visualize](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/gemini-cli-visualize.png?raw=true)
 
-- get stats of COUNTRIES, LOCATIONS and DEPARTMENTS
+- orcl-stats of COUNTRIES, LOCATIONS and DEPARTMENTS
   ![stats top](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/gemini-cli-stats-1.png?raw=true)
   ![stats botton](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/images/gemini-cli-stats-2.png?raw=true)
 
@@ -357,6 +287,11 @@ Put this in `~/.gemini/antigravity/mcp_config.json`
     "inputs": []
 }
 ```
+
+## Oracle AWR in action
+
+See [Oracle AWR in action](AWR_example.md) for an example of an AWR report generated using the `orcl-awr` tool, followed by an analysis of the top SQL statements.
+
 
 ## Building
 
@@ -404,4 +339,4 @@ after that using this registration:
 }
 ```
 
-Just replace above Demo prompts instead of "query" tool use "run-sql".
+Just replace above Demo prompts instead of "orcl-query" tool use "run-sql".

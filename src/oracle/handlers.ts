@@ -8,11 +8,11 @@ import { awrHandler } from "./tools/awr.js";
 import oracledb from "oracledb";
 
 const toolHandlers: Record<string, (request: CallToolRequest) => Promise<any>> = {
-    "query": queryHandler,
-    "explain": explainHandler,
-    "stats": statsHandler,
-    "connect": connectHandler,
-    "awr": awrHandler,
+    "orcl-query": queryHandler,
+    "orcl-explain": explainHandler,
+    "orcl-stats": statsHandler,
+    "orcl-connect": connectHandler,
+    "orcl-awr": awrHandler,
 };
 
 export const callToolHandler = async (request: CallToolRequest) => {

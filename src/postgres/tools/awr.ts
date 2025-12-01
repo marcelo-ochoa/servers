@@ -8,6 +8,8 @@ export const awrHandler = async (request: CallToolRequest) => {
                 timestamp: new Date().toISOString(),
                 database_statistics: {},
                 top_queries: [],
+                top_queries_by_cpu: [],
+                top_queries_by_io: [],
                 table_statistics: [],
                 index_statistics: [],
                 connection_info: {},
@@ -55,7 +57,7 @@ export const awrHandler = async (request: CallToolRequest) => {
             // 2. Top queries by total time (if pg_stat_statements is available)
             if (hasPgStatStatements) {
                 try {
-                    const topQueries = await client.query(`
+                    const baseQuery = `
                         SELECT 
                             queryid,
                             LEFT(query, 100) as query_text,
@@ -75,15 +77,40 @@ export const awrHandler = async (request: CallToolRequest) => {
                             temp_blks_written
                         FROM pg_stat_statements
                         WHERE dbid = (SELECT oid FROM pg_database WHERE datname = current_database())
+                    `;
+
+                    // Top by Total Time
+                    const topQueries = await client.query(`
+                        ${baseQuery}
                         ORDER BY total_exec_time DESC
                         LIMIT 20
                     `);
                     report.top_queries = topQueries.rows;
+
+                    // Top by CPU (Rows Processed)
+                    const topCpuQueries = await client.query(`
+                        ${baseQuery}
+                        ORDER BY rows DESC
+                        LIMIT 5
+                    `);
+                    report.top_queries_by_cpu = topCpuQueries.rows;
+
+                    // Top by IO (Blocks Read + Written)
+                    const topIoQueries = await client.query(`
+                        ${baseQuery}
+                        ORDER BY (shared_blks_read + shared_blks_written) DESC
+                        LIMIT 5
+                    `);
+                    report.top_queries_by_io = topIoQueries.rows;
+
                 } catch (error: any) {
                     report.top_queries_note = `pg_stat_statements extension exists but is not properly loaded. Error: ${error.message}. Add 'shared_preload_libraries = pg_stat_statements' to postgresql.conf and restart PostgreSQL.`;
                 }
             } else {
-                report.top_queries_note = "pg_stat_statements extension not available. Install with: CREATE EXTENSION pg_stat_statements;";
+                const note = "pg_stat_statements extension not available. Install with: CREATE EXTENSION pg_stat_statements;";
+                report.top_queries_note = note;
+                report.top_queries_by_cpu_note = note;
+                report.top_queries_by_io_note = note;
             }
 
             // 3. Table statistics
@@ -223,6 +250,30 @@ export const awrHandler = async (request: CallToolRequest) => {
                 LIMIT 10
             `);
             report.unused_indexes = unusedIndexes.rows;
+
+            // 8. Recommendations
+            const recommendations: string[] = [];
+
+            // Check cache hit ratio
+            const cacheHitRatio = parseFloat(report.database_statistics.cache_hit_ratio || '0');
+            if (cacheHitRatio < 99) {
+                recommendations.push(`Buffer cache hit ratio is ${cacheHitRatio}%. Consider increasing shared_buffers.`);
+            }
+
+            // Check unused indexes
+            if (report.unused_indexes && report.unused_indexes.length > 0) {
+                recommendations.push(`Found ${report.unused_indexes.length} unused indexes. Consider removing them to improve write performance.`);
+            }
+
+            // Check dead tuples
+            if (report.table_statistics) {
+                const highDeadTuples = report.table_statistics.filter((t: any) => parseFloat(t.dead_tuple_ratio || '0') > 10);
+                if (highDeadTuples.length > 0) {
+                    recommendations.push(`${highDeadTuples.length} tables have >10% dead tuples. Check autovacuum settings.`);
+                }
+            }
+
+            report.recommendations = recommendations;
 
             return {
                 content: [{
