@@ -1,5 +1,20 @@
 ## Change Log
 
+### 2025-12-02
+- **feat**: Add multi-architecture Oracle thick mode support and enhance stats tool to handle schema-prefixed table names
+  - Updated version to 1.0.1
+  - Added support for ARM64 and AMD64 architectures in Oracle thick mode
+  - Enhanced `orcl-stats` tool to accept schema-prefixed table names (e.g., `HR.COUNTRIES`)
+  - Modified stats handler to dynamically parse schema from table name
+  - Updated all database views from `dba_*` to `all_*` for broader compatibility
+  - Fixed LOB handling in resource handler for `dbms_developer.get_metadata` 
+  - Added `json_serialize` to properly convert JSON metadata to text
+
+- **refactor**: Move Oracle server usage examples from README to Demos.md
+  - Extracted "Usage with Claude Desktop" section into separate Demos.md file
+  - Improved documentation organization and modularity
+  - Updated README with link to Demos.md
+
 ### 2025-12-01
 - **feat**: Bump server version to 1.0.0
   - Updated version to 1.0.0 across package.json, server.json, and server.ts
