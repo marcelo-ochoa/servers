@@ -3,7 +3,13 @@ import { withConnection } from "../db.js";
 import oracledb from "oracledb";
 
 export const statsHandler = async (request: CallToolRequest) => {
-  const tableName = request.params.arguments?.name as string;
+  let owner = "UPPER(USER)";
+  let table = request.params.arguments?.name as string;
+  if (table.includes(".")) {
+    const parts = table.split(".");
+    owner = `'${parts[0].toUpperCase()}'`;
+    table = parts[1];
+  }
 
   return await withConnection(async (connection) => {
     const result = await connection.execute<{ STATS_JSON: string }>(`SELECT JSON_OBJECT(
@@ -17,8 +23,8 @@ export const statsHandler = async (request: CallToolRequest) => {
                 'avg_row_len' VALUE avg_row_len,
                 'last_analyzed' VALUE TO_CHAR(last_analyzed, 'YYYY-MM-DD HH24:MI:SS')
               )
-              FROM dba_tab_statistics
-              WHERE owner = UPPER(USER) AND table_name = UPPER(:tableName)
+              FROM all_tab_statistics
+              WHERE owner = ${owner} AND table_name = UPPER(:tableName)
             ),
             'index_stats' VALUE (
               SELECT JSON_ARRAYAGG(
@@ -32,8 +38,8 @@ export const statsHandler = async (request: CallToolRequest) => {
                   'last_analyzed' VALUE TO_CHAR(last_analyzed, 'YYYY-MM-DD HH24:MI:SS')
                 )
               )
-              FROM dba_ind_statistics
-              WHERE table_owner = UPPER(USER) AND table_name = UPPER(:tableName)
+              FROM all_ind_statistics
+              WHERE table_owner = ${owner} AND table_name = UPPER(:tableName)
             ),
             'column_stats' VALUE (
               SELECT JSON_ARRAYAGG(
@@ -45,11 +51,11 @@ export const statsHandler = async (request: CallToolRequest) => {
                   'last_analyzed' VALUE TO_CHAR(last_analyzed, 'YYYY-MM-DD HH24:MI:SS')
                 )
               )
-              FROM dba_tab_col_statistics
-              WHERE owner = UPPER(USER) AND table_name = UPPER(:tableName)
+              FROM all_tab_col_statistics
+              WHERE owner = ${owner} AND table_name = UPPER(:tableName)
             )
           ) AS stats_json
-          FROM dual`, [tableName, tableName, tableName], { outFormat: oracledb.OUT_FORMAT_OBJECT });
+          FROM dual`, [table, table, table], { outFormat: oracledb.OUT_FORMAT_OBJECT });
     return {
       content: [{ type: "text", text: result.rows?.[0]?.STATS_JSON, mimeType: "application/json" }],
       isError: false,

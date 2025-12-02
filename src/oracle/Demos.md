@@ -61,17 +61,18 @@ Sample prompts using the Oracle Database sample HR schema and
 
 - orcl-connect to host.docker.internal:1521/freepdb1 using hr as user and hr_2025 as password using oracle mcp server
 - orcl-query SELECT COUNTRY_NAME, CITY, COUNT(DEPARTMENT_ID)
-FROM COUNTRIES JOIN LOCATIONS USING (COUNTRY_ID) JOIN DEPARTMENTS USING (LOCATION_ID)
+FROM HR.COUNTRIES JOIN HR.LOCATIONS USING (COUNTRY_ID) JOIN HR.DEPARTMENTS USING (LOCATION_ID)
 WHERE DEPARTMENT_ID IN
- (SELECT DEPARTMENT_ID FROM EMPLOYEES
+ (SELECT DEPARTMENT_ID FROM HR.EMPLOYEES
   GROUP BY DEPARTMENT_ID
   HAVING COUNT(DEPARTMENT_ID)>5)
 GROUP BY COUNTRY_NAME, CITY
 - orcl-explain the execution plan
 - visualize above execution plan in text mode
-- orcl-stats of COUNTRIES, LOCATIONS and DEPARTMENTS
+- orcl-stats of HR.COUNTRIES, HR.LOCATIONS and HR.DEPARTMENTS
 - based on above table and index stats rewrite above query with a better execution plan
 - visualize original and rewritten execution plan
+- load resource oracle://HR/COUNTRIES/schema
 
 See in action using Claude Desktop App
 

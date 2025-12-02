@@ -15,7 +15,7 @@ import { tools } from "./tools.js";
 const server = new Server(
   {
     name: "oracle-server",
-    version: "1.0.0",
+    version: "1.0.1",
   },
   {
     capabilities: {
