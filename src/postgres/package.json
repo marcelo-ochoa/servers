@@ -1,7 +1,7 @@
 {
   "name": "@marcelo-ochoa/server-postgres",
   "mcpName": "io.github.marcelo-ochoa/postgres",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server for interacting with PostgreSQL databases",
   "keywords": [
     "read-only-mcp",
@@ -27,7 +27,7 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.0.1",
+    "@modelcontextprotocol/sdk": "^1.24.2",
     "@toon-format/toon": "^1.0.0",
     "pg": "^8.13.0"
   },

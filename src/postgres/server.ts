@@ -7,6 +7,7 @@ import {
     ListToolsRequestSchema,
     ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
+import { z } from "zod";
 import { initializePool } from "./db.js";
 import { listResourcesHandler, readResourceHandler, callToolHandler } from "./handlers.js";
 import { tools } from "./tools.js";
@@ -14,15 +15,35 @@ import { tools } from "./tools.js";
 const server = new Server(
     {
         name: "postgres-server",
-        version: "1.0.0",
+        version: "1.0.1",
     },
     {
         capabilities: {
             resources: {},
             tools: {},
+            prompts: {}, // Add this line to indicate support for prompts
         },
     },
 );
+
+const prompts = [
+    { id: 1, text: "pg-query select * from test" },
+    { id: 2, text: "pg-explain select * from test" },
+    { id: 3, text: "pg-stats test" },
+    { id: 4, text: "pg-connect to PostgreSQL using a connection string like host.docker.internal:5432/dbname with user name and password" },
+    { id: 5, text: "pg-awr to generate a PostgreSQL performance report (requires pg_stat_statements extension)" }
+];
+
+const PromptsListRequestSchema = z.object({
+    method: z.literal("prompts/list"),
+    params: z.object({}),
+});
+
+server.setRequestHandler(PromptsListRequestSchema, async () => {
+    return {
+        prompts,
+    };
+});
 
 server.setRequestHandler(ListResourceTemplatesRequestSchema, async () => {
     return {

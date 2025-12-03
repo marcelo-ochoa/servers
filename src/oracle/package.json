@@ -1,7 +1,7 @@
 {
   "name": "@marcelo-ochoa/server-oracle",
   "mcpName": "io.github.marcelo-ochoa/oracle",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MCP server for interacting with Oracle databases",
   "keywords": [
     "read-only-mcp",
@@ -28,7 +28,7 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.19.1",
+    "@modelcontextprotocol/sdk": "^1.24.2",
     "@toon-format/toon": "^1.0.0",
     "oracledb": "^6.1.0"
   },

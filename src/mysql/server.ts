@@ -7,6 +7,7 @@ import {
     ListToolsRequestSchema,
     ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
+import { z } from "zod";
 import { initializePool } from "./db.js";
 import { listResourcesHandler, readResourceHandler, callToolHandler } from "./handlers.js";
 import { tools } from "./tools.js";
@@ -14,15 +15,35 @@ import { tools } from "./tools.js";
 const server = new Server(
     {
         name: "mysql-server",
-        version: "1.0.0",
+        version: "1.0.1",
     },
     {
         capabilities: {
             resources: {},
             tools: {},
+            prompts: {}, // Add this line to indicate support for prompts
         },
     },
 );
+
+const prompts = [
+    { id: 1, text: "mysql-query select * from test_users" },
+    { id: 2, text: "mysql-explain select * from test_users" },
+    { id: 3, text: "mysql-stats test_users" },
+    { id: 4, text: "mysql-connect to MySQL using a string like host.docker.internal:3306/dbname user name and password" },
+    { id: 5, text: "mysql-awr for MySQL performance report similar to Oracle AWR" }
+];
+
+const PromptsListRequestSchema = z.object({
+    method: z.literal("prompts/list"),
+    params: z.object({}),
+});
+
+server.setRequestHandler(PromptsListRequestSchema, async () => {
+    return {
+        prompts,
+    };
+});
 
 server.setRequestHandler(ListResourceTemplatesRequestSchema, async () => {
     return {
