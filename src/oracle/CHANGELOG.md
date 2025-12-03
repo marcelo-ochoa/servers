@@ -1,5 +1,18 @@
 ## Change Log
 
+### 2025-12-03
+- **feat**: Upgrade MCP SDK and bump server version to 1.0.2
+  - Updated version to 1.0.2 across package.json, server.json, and server.ts
+  - Upgraded @modelcontextprotocol/sdk from ^1.19.1 to ^1.24.2
+  - Maintained existing prompts/list functionality with 5 Oracle-specific prompt templates:
+    - `orcl-query` - Example query execution
+    - `orcl-explain` - Query execution plan analysis
+    - `orcl-stats` - Table/object statistics retrieval
+    - `orcl-connect` - Database connection instructions
+    - `orcl-awr` - AWR performance report generation
+  - Published package @marcelo-ochoa/server-oracle@1.0.2 to npm registry
+  - Rebuilt Docker image mochoa/mcp-oracle with updated dependencies
+
 ### 2025-12-02
 - **feat**: Add multi-architecture Oracle thick mode support and enhance stats tool to handle schema-prefixed table names
   - Updated version to 1.0.1

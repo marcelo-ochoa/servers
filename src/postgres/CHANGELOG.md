@@ -1,5 +1,21 @@
 ## Change Log
 
+### 2025-12-03
+- **feat**: Add prompts capability and list handler to PostgreSQL server
+  - Updated version to 1.0.1
+  - Added `prompts: {}` capability to server configuration
+  - Imported zod library for schema validation
+  - Implemented `PromptsListRequestSchema` using zod for request validation
+  - Added prompts array with 5 PostgreSQL-specific prompt templates:
+    - `pg-query` - Example query execution
+    - `pg-explain` - Query execution plan analysis
+    - `pg-stats` - Table statistics retrieval
+    - `pg-connect` - Database connection instructions
+    - `pg-awr` - Performance report generation (requires pg_stat_statements extension)
+  - Added request handler for `prompts/list` endpoint
+  - Published package @marcelo-ochoa/server-postgres@1.0.1 to npm registry
+  - Rebuilt Docker image mochoa/mcp-postgres with updated functionality
+
 ### 2025-12-01
 - **feat**: Bump server version to 1.0.0
   - Updated version to 1.0.0 across package.json, server.json, and server.ts

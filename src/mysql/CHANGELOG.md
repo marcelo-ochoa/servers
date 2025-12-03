@@ -1,5 +1,19 @@
 ## Change Log
 
+### 2025-12-03
+- **feat**: Add prompts capability and list handler to MySQL server
+  - Updated version to 1.0.1
+  - Added `prompts: {}` capability to server configuration
+  - Implemented `PromptsListRequestSchema` using zod for request validation
+  - Added prompts array with 5 MySQL-specific prompt templates:
+    - `mysql-query` - Example query execution
+    - `mysql-explain` - Query execution plan analysis
+    - `mysql-stats` - Table statistics retrieval
+    - `mysql-connect` - Database connection instructions
+    - `mysql-awr` - Performance report generation
+  - Added request handler for `prompts/list` endpoint
+  - Published package @marcelo-ochoa/server-mysql@1.0.1 to npm registry
+
 ### 2025-12-01
 - **feat**: Bump server version to 1.0.0
   - Updated version to 1.0.0 across package.json, server.json, and server.ts
