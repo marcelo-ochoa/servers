@@ -52,9 +52,18 @@ export const readResourceHandler = async (request: ReadResourceRequest) => {
     }
 
     return await withConnection(async (connection) => {
-        const [result] = await connection.query(
-            "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = ? AND table_schema = DATABASE()",
-            [tableName],
+        const [columns] = await connection.query(
+            `SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE, COLUMN_KEY, COLUMN_TYPE, EXTRA, COLUMN_COMMENT 
+             FROM information_schema.COLUMNS 
+             WHERE TABLE_NAME = ? AND TABLE_SCHEMA = DATABASE()`,
+            [tableName]
+        );
+
+        const [indexes] = await connection.query(
+            `SELECT INDEX_NAME, NON_UNIQUE, SEQ_IN_INDEX, COLUMN_NAME, COLLATION, CARDINALITY, INDEX_TYPE, COMMENT
+             FROM information_schema.STATISTICS
+             WHERE TABLE_NAME = ? AND TABLE_SCHEMA = DATABASE()`,
+            [tableName]
         );
 
         return {
@@ -62,7 +71,7 @@ export const readResourceHandler = async (request: ReadResourceRequest) => {
                 {
                     uri: request.params.uri,
                     mimeType: "application/json",
-                    text: JSON.stringify(result, null, 2),
+                    text: JSON.stringify({ columns, indexes }, null, 2),
                 },
             ],
         };
