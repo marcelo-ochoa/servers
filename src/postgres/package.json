@@ -1,7 +1,7 @@
 {
   "name": "@marcelo-ochoa/server-postgres",
   "mcpName": "io.github.marcelo-ochoa/postgres",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MCP server for interacting with PostgreSQL databases",
   "keywords": [
     "read-only-mcp",
