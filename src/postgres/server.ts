@@ -49,7 +49,7 @@ server.setRequestHandler(ListResourceTemplatesRequestSchema, async () => {
     return {
         resourceTemplates: [
             {
-                uriTemplate: "postgres://{database}/{table_name}/schema",
+                uriTemplate: "postgres://{schema}/{table_name}/schema",
                 name: "Table Schema",
                 description: "Schema information for a PostgreSQL database table including column names and data types",
             },

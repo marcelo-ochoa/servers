@@ -2,10 +2,17 @@ import { CallToolRequest } from "@modelcontextprotocol/sdk/types.js";
 import { withConnection } from "../db.js";
 
 export const statsHandler = async (request: CallToolRequest) => {
-    const tableName = request.params.arguments?.name as string;
+  let schema = 'public';
+  let tableName = request.params.arguments?.name as string;
 
-    return await withConnection(async (client) => {
-        const result = await client.query(`
+  if (tableName.includes('.')) {
+    const parts = tableName.split('.');
+    schema = parts[0];
+    tableName = parts[1];
+  }
+
+  return await withConnection(async (client) => {
+    const result = await client.query(`
       SELECT json_build_object(
         'table_stats', (
           SELECT json_build_object(
@@ -18,7 +25,7 @@ export const statsHandler = async (request: CallToolRequest) => {
           FROM pg_class c
           JOIN pg_namespace n ON n.oid = c.relnamespace
           LEFT JOIN pg_stat_user_tables s ON s.relid = c.oid
-          WHERE c.relname = $1 AND n.nspname = 'public'
+          WHERE c.relname = $1 AND n.nspname = $2
         ),
         'index_stats', (
           SELECT json_agg(
@@ -33,7 +40,7 @@ export const statsHandler = async (request: CallToolRequest) => {
           JOIN pg_class c ON c.oid = i.indrelid
           JOIN pg_class c2 ON c2.oid = i.indexrelid
           JOIN pg_namespace n ON n.oid = c.relnamespace
-          WHERE c.relname = $1 AND n.nspname = 'public'
+          WHERE c.relname = $1 AND n.nspname = $2
         ),
         'column_stats', (
           SELECT json_agg(
@@ -45,14 +52,14 @@ export const statsHandler = async (request: CallToolRequest) => {
             )
           )
           FROM pg_stats
-          WHERE tablename = $1 AND schemaname = 'public'
+          WHERE tablename = $1 AND schemaname = $2
         )
       ) as stats_json
-    `, [tableName]);
+    `, [tableName, schema]);
 
-        return {
-            content: [{ type: "text", text: JSON.stringify(result.rows[0].stats_json, null, 2), mimeType: "application/json" }],
-            isError: false,
-        };
-    });
+    return {
+      content: [{ type: "text", text: JSON.stringify(result.rows[0].stats_json, null, 2), mimeType: "application/json" }],
+      isError: false,
+    };
+  });
 };
