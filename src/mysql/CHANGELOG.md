@@ -1,5 +1,30 @@
 ## Change Log
 
+### 2025-12-12
+- **chore**: Bump server version to 1.0.3
+  - Updated version to 1.0.3 across package.json, server.json, and server.ts
+  - Added link to Demos.md in README for comprehensive usage examples
+  - Published package @marcelo-ochoa/server-mysql@1.0.3 to npm registry
+  - Rebuilt Docker image mochoa/mcp-mysql with updated functionality
+
+- **chore**: Bump server version to 1.0.2
+  - Updated version to 1.0.2 across package.json, server.json, and server.ts
+  - Updated LICENSE link in README to point to GitHub repository
+  - Published package @marcelo-ochoa/server-mysql@1.0.2 to npm registry
+
+- **docs**: Add comprehensive demo documentation and HR sample schema
+  - Added Demos.md with usage examples for:
+    - Claude Desktop (Docker and NPX configurations)
+    - Docker AI integration
+    - Gemini CLI usage
+    - Antigravity Code Editor setup
+  - Added HR schema and data SQL scripts for MySQL/MariaDB:
+    - `hr_schema_mysql.sql` - Complete HR schema with tables (regions, countries, locations, departments, jobs, employees, job_history)
+    - `hr_data_mysql.sql` - Sample data for HR schema
+    - Comprehensive table documentation with comments
+    - Foreign key constraints and indexes for performance
+  - Enhanced README with better documentation organization
+
 ### 2025-12-03
 - **feat**: Add prompts capability and list handler to MySQL server
   - Updated version to 1.0.1

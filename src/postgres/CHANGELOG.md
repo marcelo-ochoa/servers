@@ -1,5 +1,39 @@
 ## Change Log
 
+### 2025-12-12
+- **chore**: Bump server version to 1.0.3
+  - Updated version to 1.0.3 across package.json, server.json, and server.ts
+  - Added link to Demos.md in README for comprehensive usage examples
+  - Published package @marcelo-ochoa/server-postgres@1.0.3 to npm registry
+  - Rebuilt Docker image mochoa/mcp-postgres with updated functionality
+
+- **chore**: Bump server version to 1.0.2
+  - Updated version to 1.0.2 across package.json, server.json, and server.ts
+  - Updated LICENSE link in README to point to GitHub repository
+  - Published package @marcelo-ochoa/server-postgres@1.0.2 to npm registry
+
+- **feat**: Enhanced pg-stats tool to support schema-prefixed table names
+  - Modified `pg-stats` handler to accept `schema.table_name` syntax (e.g., `hr.employees`)
+  - Added automatic schema parsing from table name
+  - Defaults to 'public' schema if no schema prefix is provided
+  - Updated all statistics queries to use dynamic schema parameter
+  - Improved column statistics, index statistics, and table statistics retrieval
+
+- **docs**: Add comprehensive demo documentation and HR sample schema
+  - Added Demos.md with usage examples for:
+    - Claude Desktop (Docker and NPX configurations)
+    - Docker AI integration
+    - Gemini CLI usage
+    - Antigravity Code Editor setup
+  - Added HR schema and data SQL scripts for PostgreSQL:
+    - `hr_schema_postgres.sql` - Complete HR schema with tables (regions, countries, locations, departments, jobs, employees, job_history)
+    - `hr_data_postgres.sql` - Sample data for HR schema
+    - Schema-aware implementation using `hr` schema namespace
+    - Foreign key constraints and indexes for performance
+    - Comprehensive table documentation with comments
+  - Enhanced README with better documentation organization
+  - Added resource templates showing schema-aware table access patterns
+
 ### 2025-12-03
 - **feat**: Add prompts capability and list handler to PostgreSQL server
   - Updated version to 1.0.1

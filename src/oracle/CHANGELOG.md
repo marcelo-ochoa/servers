@@ -1,5 +1,16 @@
 ## Change Log
 
+### 2025-12-12
+- **chore**: Bump server version to 1.0.3
+  - Updated version to 1.0.3 across package.json, server.json, and server.ts
+  - Published package @marcelo-ochoa/server-oracle@1.0.3 to npm registry
+  - Rebuilt Docker image mochoa/mcp-oracle with updated dependencies
+  - Updated LICENSE link in README to point to GitHub repository
+
+- **docs**: Add MIT License file
+  - Added LICENSE file with MIT License text
+  - Updated README with proper license link
+
 ### 2025-12-03
 - **feat**: Upgrade MCP SDK and bump server version to 1.0.2
   - Updated version to 1.0.2 across package.json, server.json, and server.ts
