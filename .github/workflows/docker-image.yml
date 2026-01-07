@@ -44,3 +44,11 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: mochoa/mcp-mysql:latest
+      - name: Build and push Mikrotik
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./src/mikrotik/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: mochoa/mcp-mikrotik:latest
