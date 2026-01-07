@@ -64,19 +64,17 @@ server.setRequestHandler(CallToolRequestSchema, callToolHandler);
 
 export async function runServer() {
   const args = process.argv.slice(2);
-  if (args.length === 0) {
-    console.error("Please provide an Oracle database connection string as a command-line argument");
-    process.exit(1);
-  }
-
   const connectionString = args[0];
 
-  if (!process.env.ORACLE_USER) {
-    console.error("Error: Environment variable ORACLE_USER must be set.");
-    process.exit(1);
+  if (connectionString) {
+    if (!process.env.ORACLE_USER) {
+      console.error("Error: Environment variable ORACLE_USER must be set.");
+      process.exit(1);
+    }
+    await initializePool(connectionString); // Initialize the pool before starting the server
+  } else {
+    console.error("Warning: No Oracle connection string provided. Use orcl-connect tool before using other functionality.");
   }
-
-  await initializePool(connectionString); // Initialize the pool before starting the server
   const transport = new StdioServerTransport();
   await server.connect(transport);
 

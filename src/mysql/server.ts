@@ -64,17 +64,17 @@ server.setRequestHandler(CallToolRequestSchema, callToolHandler);
 
 export async function runServer() {
     const args = process.argv.slice(2);
-    if (args.length === 0) {
-        console.error("Please provide a database URL as a command-line argument");
-        process.exit(1);
-    }
-
     const databaseUrl = args[0];
-    try {
-        await initializePool(databaseUrl);
-    } catch (error) {
-        console.error("Failed to initialize database pool:", error);
-        process.exit(1);
+
+    if (databaseUrl) {
+        try {
+            await initializePool(databaseUrl);
+        } catch (error) {
+            console.error("Failed to initialize database pool:", error);
+            process.exit(1);
+        }
+    } else {
+        console.error("Warning: No database URL provided. Use mysql-connect tool before using other functionality.");
     }
 
     const transport = new StdioServerTransport();

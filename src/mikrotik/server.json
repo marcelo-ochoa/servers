@@ -1,0 +1,21 @@
+{
+    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+    "name": "io.github.marcelo-ochoa/mikrotik",
+    "description": "MCP server for MikroTik RouterOS API",
+    "repository": {
+        "url": "https://github.com/marcelo-ochoa/servers",
+        "source": "github",
+        "subfolder": "src/mikrotik"
+    },
+    "version": "1.0.0",
+    "packages": [
+        {
+            "registryType": "npm",
+            "identifier": "@marcelo-ochoa/server-mikrotik",
+            "version": "1.0.0",
+            "transport": {
+                "type": "stdio"
+            }
+        }
+    ]
+}

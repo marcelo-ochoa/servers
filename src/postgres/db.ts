@@ -62,14 +62,14 @@ export async function initializePool(connectionString: string) {
 
 export function getPool(): pg.Pool {
     if (!pool) {
-        throw new Error("Postgres connection pool not initialized.");
+        throw new Error("Postgres connection pool not initialized. Use pg-connect tool first.");
     }
     return pool;
 }
 
 export function getResourceBaseUrl(): URL {
     if (!resourceBaseUrl) {
-        throw new Error("Resource Base URL not initialized.");
+        throw new Error("Resource Base URL not initialized. Use pg-connect tool first.");
     }
     return resourceBaseUrl;
 }

@@ -1,0 +1,88 @@
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import {
+    CallToolRequestSchema,
+    ListToolsRequestSchema,
+} from "@modelcontextprotocol/sdk/types.js";
+import { z } from "zod";
+import { callToolHandler, initializeApi } from "./handlers.js";
+import { tools } from "./tools.js";
+
+const server = new Server(
+    {
+        name: "mikrotik-api",
+        version: "1.0.0",
+    },
+    {
+        capabilities: {
+            tools: {},
+            prompts: {},
+        },
+    }
+);
+
+const prompts = [
+    { id: 1, text: "mk-connect to MikroTik using host, user and password" },
+    { id: 2, text: "mk-report for a comprehensive system report" },
+    { id: 3, text: "mk-print ip/route to show the routing table" },
+    { id: 4, text: "mk-print interface to list all interfaces" },
+    { id: 5, text: "mk-print log to view system logs" }
+];
+
+const PromptsListRequestSchema = z.object({
+    method: z.literal("prompts/list"),
+    params: z.object({}),
+});
+
+server.setRequestHandler(PromptsListRequestSchema, async () => {
+    return {
+        prompts,
+    };
+});
+
+let lock: Promise<any> = Promise.resolve();
+
+async function executeSequential<T>(fn: () => Promise<T>): Promise<T> {
+    const result = (async () => {
+        try {
+            await lock;
+        } catch (e) {
+            // Ignore errors from previous commands to let the next one run
+        }
+        return fn();
+    })();
+    lock = result.catch(() => { });
+    return result;
+}
+
+server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
+
+server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    return executeSequential(() => callToolHandler(request));
+});
+
+export async function runServer() {
+    const args = process.argv.slice(2);
+    const host = args[0];
+    const secure = args[1] === "true";
+
+    if (host) {
+        try {
+            await initializeApi(host, undefined, undefined, secure);
+        } catch (error) {
+            console.error("Failed to connect to MikroTik:", error);
+            // Don't exit here, allow the server to start even if connection fails
+        }
+    } else {
+        console.error("Warning: No MikroTik host provided. Use mk-connect tool before using other functionality.");
+    }
+
+    const transport = new StdioServerTransport();
+    await server.connect(transport);
+
+    process.stdin.on("close", () => {
+        console.error("Mikrotik MCP Server closed");
+        server.close();
+        process.exit(0);
+    });
+}

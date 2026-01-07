@@ -110,14 +110,14 @@ export async function initializePool(connectionString: string) {
 
 export function getPool(): mysql.Pool {
     if (!pool) {
-        throw new Error("MySQL connection pool not initialized.");
+        throw new Error("MySQL connection pool not initialized. Use mysql-connect tool first.");
     }
     return pool;
 }
 
 export function getResourceBaseUrl(): URL {
     if (!resourceBaseUrl) {
-        throw new Error("Resource Base URL not initialized.");
+        throw new Error("Resource Base URL not initialized. Use mysql-connect tool first.");
     }
     return resourceBaseUrl;
 }

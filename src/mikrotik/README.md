@@ -1,0 +1,127 @@
+# MikroTik RouterOS API MCP Server
+
+A Read-Only MCP server implementation for interacting with MikroTik routers using the RouterOS API.
+
+## Features
+
+- **Connection Management**: Connect and authenticate with MikroTik routers.
+- **Route Monitoring**: Retrieve IP routing tables in structured JSON format.
+- **Protocol Support**: Works with both plain TCP (8728) and secure SSL/TLS (8729).
+- **Modern & Legacy Login**: Supports RouterOS versions prior to and after v6.43.
+
+## Tools
+
+1. `mk-connect`: Connects to a router.
+   - `host`: IP address of the router.
+   - `user`: Username.
+   - `password`: Password.
+   - `secure`: (Optional) Use SSL/TLS. Default is `false`.
+
+Example:
+ mk-connect 192.168.88.1 admin mypassword
+
+2. `mk-report`: Generates a comprehensive system report.
+   - Aggregates system resources, health, routerboard info, and interface traffic statistics (using `monitor-traffic` once).
+
+3. `mk-print`: Returns a JSON array with the result of a MikroTik API `/print` command.
+   - `sentence`: The API path (e.g., `/ip/route`, `/interface`, `/log`).
+   - The server automatically ensures the path starts with `/` and ends with `/print`.
+
+### Configuration
+
+The MikroTik server can use environment variables or the `mk-connect` tool for secure credential management:
+
+- **`MK_USER`**: MikroTik username (required if providing host at startup)
+- **`MK_PASSWORD`**: MikroTik password (required if providing host at startup)
+
+### Startup Arguments
+
+You can optionally provide the host and security setting as command-line arguments:
+1. `host`: (Optional) IP address of the router.
+2. `secure`: (Optional) Use SSL/TLS. Default is `false`.
+
+If these are provided, the server will attempt to connect automatically on startup using `MK_USER` and `MK_PASSWORD`.
+
+### Local Build
+
+```bash
+cd src/mikrotik
+npm install
+npm run build
+```
+
+### Usage with Claude Desktop
+
+Add this to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "mikrotik": {
+      "command": "node",
+      "args": [
+        "/absolute/path/to/src/mikrotik/dist/index.js",
+        "192.168.88.1",
+        "false"
+      ],
+      "env": {
+        "MK_USER": "admin",
+        "MK_PASSWORD": "mypassword"
+      }
+    }
+  }
+}
+```
+
+Sample using Docker:
+
+```json
+{
+  "mcpServers": {
+    "mikrotik": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "MK_USER=admin",
+        "-e",
+        "MK_PASSWORD=password",
+        "mochoa/mcp-mikrotik",
+        "192.168.88.1",
+        "false"
+      ]
+    }
+}
+```
+
+Note: Arguments and environment variables are optional. You can connect later using `mk-connect`.
+
+## Demos
+
+Using the information of mk-print
+   - interface
+   - ip/address
+   - ip/route
+   - ip/route/rules
+   - ip/firewall[address-list,filter,nat,mangle]
+find potential security risk and no-used entities
+
+## Docker
+
+Building the container:
+
+```bash
+docker build -t mochoa/mcp-mikrotik -f src/mikrotik/Dockerfile .
+```
+
+Running the container:
+
+```bash
+docker run -i --rm -e MK_USER=admin -e MK_PASSWORD=mypassword mochoa/mcp-mikrotik 192.168.88.1
+```
+
+## License
+
+MIT

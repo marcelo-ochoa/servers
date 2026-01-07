@@ -27,6 +27,9 @@ A Model Context Protocol server that provides read-only access to MySQL database
   - Input: `user` (string): Username (e.g., root)
   - Input: `password` (string): Password
 
+Example:
+ mysql-connect host.docker.internal:3306/hr root my_2025
+
 - **mysql-awr**
   - Generate a MySQL performance report similar to Oracle AWR
   - Includes database statistics, InnoDB metrics, top queries (requires performance_schema), table/index statistics, connection info, and optimization recommendations
@@ -43,14 +46,14 @@ The server provides schema information for each table in the MySQL database:
 
 ## Configuration
 
-### Authentication
+The MySQL server uses environment variables or the `mysql-connect` tool for secure credential management:
 
-The MySQL server uses environment variables for secure credential management:
+- **`MYSQL_USER`**: MySQL username (optional if using `mysql-connect`)
+- **`MYSQL_PASSWORD`**: MySQL password (optional if using `mysql-connect`)
 
-- **`MYSQL_USER`**: MySQL username (required)
-- **`MYSQL_PASSWORD`**: MySQL password (required)
+### Connection String
 
-The connection string should contain only the host, port, and database information (without embedded credentials).
+The connection string should contain only the host, port, and database information (without embedded credentials). Providing it as a command-line argument is **optional**. If omitted at startup, you must use the `mysql-connect` tool to establish a connection before using other functionality.
 
 **Supported connection string formats:**
 - `mysql://host:port/dbname`
@@ -76,13 +79,14 @@ To use this server with the Claude Desktop app, add the following configuration 
         "--rm",
         "-e", "MYSQL_USER=myuser",
         "-e", "MYSQL_PASSWORD=mypassword",
-        "mochoa/mcp-mysql", 
-        "host.docker.internal:3306/mydb"
+        "mochoa/mcp-mysql"
       ]
     }
   }
 }
 ```
+
+Note: You can still provide the connection string as a final argument if you want to connect automatically on startup: `"args": [..., "mochoa/mcp-mysql", "host.docker.internal:3306/mydb"]`.
 
 ### NPX
 
@@ -93,8 +97,7 @@ To use this server with the Claude Desktop app, add the following configuration 
       "command": "npx",
       "args": [
         "-y",
-        "@marcelo-ochoa/server-mysql",
-        "localhost:3306/mydb"
+        "@marcelo-ochoa/server-mysql"
       ],
       "env": {
         "MYSQL_USER": "myuser",
@@ -130,11 +133,6 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
     "inputs": [
       {
         "type": "promptString",
-        "id": "mysql_url",
-        "description": "MySQL URL (e.g. mysql://host.docker.internal:3306/mydb)"
-      },
-      {
-        "type": "promptString",
         "id": "mysql_user",
         "description": "MySQL username"
       },
@@ -154,8 +152,7 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
           "--rm",
           "-e", "MYSQL_USER=${input:mysql_user}",
           "-e", "MYSQL_PASSWORD=${input:mysql_password}",
-          "mochoa/mcp-mysql",
-          "${input:mysql_url}"
+          "mochoa/mcp-mysql"
         ]
       }
     }
@@ -163,17 +160,14 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
 }
 ```
 
+Note: You can add an input for `mysql_url` and append it to `args` if you want to connect on startup.
+
 ### NPX
 
 ```json
 {
   "mcp": {
     "inputs": [
-      {
-        "type": "promptString",
-        "id": "mysql_url",
-        "description": "MySQL URL (e.g. mysql://localhost:3306/mydb)"
-      },
       {
         "type": "promptString",
         "id": "mysql_user",
@@ -191,8 +185,7 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
         "command": "npx",
         "args": [
           "-y",
-          "@marcelo-ochoa/server-mysql",
-          "${input:mysql_url}"
+          "@marcelo-ochoa/server-mysql"
         ],
         "env": {
           "MYSQL_USER": "${input:mysql_user}",

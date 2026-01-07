@@ -1,0 +1,25 @@
+{
+    "name": "@marcelo-ochoa/server-mikrotik",
+    "mcpName": "io.github.marcelo-ochoa/mikrotik",
+    "version": "1.0.0",
+    "description": "MCP server for MikroTik RouterOS API",
+    "type": "module",
+    "bin": {
+        "mcp-server-mikrotik": "dist/index.js"
+    },
+    "main": "dist/api.js",
+    "types": "dist/api.d.ts",
+    "scripts": {
+        "build": "tsc && shx chmod +x dist/*.js",
+        "prepare": "npm run build",
+        "watch": "tsc --watch"
+    },
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.24.2"
+    },
+    "devDependencies": {
+        "@types/node": "^22",
+        "shx": "^0.3.4",
+        "typescript": "^5.6.2"
+    }
+}

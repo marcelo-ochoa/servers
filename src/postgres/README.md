@@ -26,6 +26,9 @@ A Model Context Protocol server that provides read-only access to PostgreSQL dat
     - `user` (string): The PostgreSQL username
     - `password` (string): The PostgreSQL password
 
+Example:
+ pg-connect host.docker.internal:5432/postgres postgres pg_2025
+
 - **pg-awr**
   - Generate a PostgreSQL performance report similar to Oracle AWR. Includes database statistics, top queries (requires pg_stat_statements extension), table/index statistics, connection info, and optimization recommendations.
 
@@ -44,14 +47,14 @@ See [Change Log](https://github.com/marcelo-ochoa/servers/blob/main/src/postgres
 
 ## Configuration
 
-### Authentication
+The PostgreSQL server uses environment variables or the `pg-connect` tool for secure credential management:
 
-The PostgreSQL server uses environment variables for secure credential management:
+- **`PG_USER`**: PostgreSQL username (optional if using `pg-connect`)
+- **`PG_PASSWORD`**: PostgreSQL password (optional if using `pg-connect`)
 
-- **`PG_USER`**: PostgreSQL username (required)
-- **`PG_PASSWORD`**: PostgreSQL password (required)
+### Connection String
 
-The connection string should contain only the host, port, and database information (without embedded credentials).
+The connection string should contain only the host, port, and database information (without embedded credentials). Providing it as a command-line argument is **optional**. If omitted at startup, you must use the `pg-connect` tool to establish a connection before using other functionality.
 
 **Supported connection string formats:**
 - `postgresql://host:port/dbname`
@@ -77,13 +80,14 @@ To use this server with the Claude Desktop app, add the following configuration 
         "--rm",
         "-e", "PG_USER=myuser",
         "-e", "PG_PASSWORD=mypassword",
-        "mochoa/mcp-postgres", 
-        "postgresql://host.docker.internal:5432/mydb"
+        "mochoa/mcp-postgres"
       ]
     }
   }
 }
 ```
+
+Note: You can still provide the connection string as a final argument if you want to connect automatically on startup: `"args": [..., "mochoa/mcp-postgres", "postgresql://host.docker.internal:5432/mydb"]`.
 
 ### NPX
 
@@ -94,8 +98,7 @@ To use this server with the Claude Desktop app, add the following configuration 
       "command": "npx",
       "args": [
         "-y",
-        "@marcelo-ochoa/server-postgres",
-        "postgresql://localhost:5432/mydb"
+        "@marcelo-ochoa/server-postgres"
       ],
       "env": {
         "PG_USER": "myuser",
@@ -137,11 +140,6 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
     "inputs": [
       {
         "type": "promptString",
-        "id": "pg_url",
-        "description": "PostgreSQL URL (e.g. postgresql://host.docker.internal:5432/mydb)"
-      },
-      {
-        "type": "promptString",
         "id": "pg_user",
         "description": "PostgreSQL username"
       },
@@ -161,8 +159,7 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
           "--rm",
           "-e", "PG_USER=${input:pg_user}",
           "-e", "PG_PASSWORD=${input:pg_password}",
-          "mochoa/mcp-postgres",
-          "${input:pg_url}"
+          "mochoa/mcp-postgres"
         ]
       }
     }
@@ -170,17 +167,14 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
 }
 ```
 
+Note: You can add an input for `pg_url` and append it to `args` if you want to connect on startup.
+
 ### NPX
 
 ```json
 {
   "mcp": {
     "inputs": [
-      {
-        "type": "promptString",
-        "id": "pg_url",
-        "description": "PostgreSQL URL (e.g. postgresql://localhost:5432/mydb)"
-      },
       {
         "type": "promptString",
         "id": "pg_user",
@@ -198,8 +192,7 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
         "command": "npx",
         "args": [
           "-y",
-          "@marcelo-ochoa/server-postgres",
-          "${input:pg_url}"
+          "@marcelo-ochoa/server-postgres"
         ],
         "env": {
           "PG_USER": "${input:pg_user}",
