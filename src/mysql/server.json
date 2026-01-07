@@ -7,12 +7,12 @@
     "source": "github",
     "subfolder": "src/mysql"
   },
-  "version": "1.0.3",
+  "version": "1.0.4",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@marcelo-ochoa/server-mysql",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "transport": {
         "type": "stdio"
       },
