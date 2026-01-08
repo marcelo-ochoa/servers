@@ -1,6 +1,7 @@
 ## Change Log
 
 ### 2026-01-08
+- **feat**: Improved login handling to correctly detect `!trap` responses
 - **docs**: Updated documentation with Docker examples and License information
 
 ### 2026-01-07
