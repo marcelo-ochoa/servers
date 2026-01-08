@@ -15,7 +15,31 @@
             "version": "1.0.1",
             "transport": {
                 "type": "stdio"
-            }
+            },
+            "packageArguments": [
+                {
+                    "type": "positional",
+                    "valueHint": "host",
+                    "description": "MikroTik host",
+                    "isRequired": false
+                }
+            ],
+            "environmentVariables": [
+                {
+                    "description": "MikroTik username",
+                    "isRequired": false,
+                    "format": "string",
+                    "isSecret": false,
+                    "name": "MK_USER"
+                },
+                {
+                    "description": "MikroTik password",
+                    "isRequired": false,
+                    "format": "string",
+                    "isSecret": true,
+                    "name": "MK_PASSWORD"
+                }
+            ]
         }
     ]
 }

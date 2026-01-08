@@ -2,7 +2,12 @@
     "name": "@marcelo-ochoa/server-mikrotik",
     "mcpName": "io.github.marcelo-ochoa/mikrotik",
     "version": "1.0.1",
-    "description": "MCP server for MikroTik RouterOS API",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/marcelo-ochoa/servers.git",
+        "subfolder": "src/mikrotik"
+    },
+    "description": "An MCP server for MikroTik RouterOS API.",
     "keywords": [
         "read-only-mcp",
         "mikrotik",
