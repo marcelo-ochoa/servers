@@ -2,7 +2,12 @@
   "name": "@marcelo-ochoa/server-postgres",
   "mcpName": "io.github.marcelo-ochoa/postgres",
   "version": "1.0.4",
-  "description": "MCP server for interacting with PostgreSQL databases",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marcelo-ochoa/servers.git",
+    "subfolder": "src/postgres"
+  },
+  "description": "An MCP server for PostgreSQL databases.",
   "keywords": [
     "read-only-mcp",
     "postgres-database",

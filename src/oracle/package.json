@@ -2,7 +2,12 @@
   "name": "@marcelo-ochoa/server-oracle",
   "mcpName": "io.github.marcelo-ochoa/oracle",
   "version": "1.0.4",
-  "description": "MCP server for interacting with Oracle databases",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marcelo-ochoa/servers.git",
+    "subfolder": "src/oracle"
+  },
+  "description": "An MCP server for Oracle databases.",
   "keywords": [
     "read-only-mcp",
     "oracle-database",

@@ -1,7 +1,7 @@
 {
-  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.marcelo-ochoa/mysql",
-  "description": "MCP server for interacting with MySQL databases",
+  "description": "An MCP server for MySQL databases.",
   "repository": {
     "url": "https://github.com/marcelo-ochoa/servers",
     "source": "github",
@@ -16,17 +16,25 @@
       "transport": {
         "type": "stdio"
       },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "valueHint": "connectionString",
+          "description": "MySQL connection string",
+          "isRequired": false
+        }
+      ],
       "environmentVariables": [
         {
-          "description": "MySQL user",
-          "isRequired": true,
+          "description": "MySQL username",
+          "isRequired": false,
           "format": "string",
-          "isSecret": true,
+          "isSecret": false,
           "name": "MYSQL_USER"
         },
         {
           "description": "MySQL password",
-          "isRequired": true,
+          "isRequired": false,
           "format": "string",
           "isSecret": true,
           "name": "MYSQL_PASSWORD"

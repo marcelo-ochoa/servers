@@ -1,5 +1,5 @@
 {
-  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.marcelo-ochoa/oracle",
   "description": "MCP server for interacting with Oracle databases",
   "repository": {
@@ -16,17 +16,25 @@
       "transport": {
         "type": "stdio"
       },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "valueHint": "connectionString",
+          "description": "Oracle connection string",
+          "isRequired": false
+        }
+      ],
       "environmentVariables": [
         {
           "description": "Oracle user name",
-          "isRequired": true,
+          "isRequired": false,
           "format": "string",
           "isSecret": false,
           "name": "ORACLE_USER"
         },
         {
           "description": "Oracle password",
-          "isRequired": true,
+          "isRequired": false,
           "format": "string",
           "isSecret": true,
           "name": "ORACLE_PASSWORD"
