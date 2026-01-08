@@ -204,9 +204,10 @@ export class MikroTikApi {
 
     async login(username: string, password: string): Promise<boolean> {
         const replies = await this.talk(['/login', `=name=${username}`, `=password=${password}`]);
-        const lastReply = replies[replies.length - 1];
 
-        if (lastReply.command === '!trap') return false;
+        if (replies.some(r => r.command === '!trap')) return false;
+
+        const lastReply = replies[replies.length - 1];
 
         if (lastReply.attributes['ret']) {
             // Legacy MD5 login
@@ -218,8 +219,7 @@ export class MikroTikApi {
             const response = md.digest('hex');
 
             const replies2 = await this.talk(['/login', `=name=${username}`, `=response=00${response}`]);
-            const lastReply2 = replies2[replies2.length - 1];
-            return lastReply2.command !== '!trap';
+            return !replies2.some(r => r.command === '!trap');
         }
 
         return lastReply.command === '!done';
