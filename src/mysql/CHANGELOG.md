@@ -1,5 +1,16 @@
 ## Change Log
 
+### 2026-01-08
+- **chore**: Bump server version to 1.0.4
+  - Updated version to 1.0.4 across package.json, server.json, and server.ts
+
+### 2026-01-07
+- **feat**: Make initial connection string optional at startup
+  - Modified `runServer` to allow server startup without a database URL
+  - Added warning message when starting without a connection string
+  - Updated error messages to guide users to use the `mysql-connect` tool
+  - Updated README with documentation for optional connection string and `mysql-connect` tool usage
+
 ### 2025-12-12
 - **chore**: Bump server version to 1.0.3
   - Updated version to 1.0.3 across package.json, server.json, and server.ts
@@ -80,8 +91,14 @@
 
 ### Recent Updates
 
-- **2025-11-27** (0085cb7)
-  - feat: Add server.json definitions and update versions for MySQL and PostgreSQL servers
+- **2026-01-07** (762080d)
+  - Impl optional argument on run and environtment variable setup for initial connect
+
+- **2025-12-14** (d740363)
+  - update CHANGELOG.md files
+
+- **2025-12-12** (ba86d83)
+  - unifi release version and link to demos on MySQL/PostgreSQL
   - Added server.json with MCP server metadata and schema
   - Updated version to 0.1.2
   - Added mcpName field to package.json

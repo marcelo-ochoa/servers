@@ -1,4 +1,15 @@
 ## Change Log
+ 
+### 2026-01-08
+- **chore**: Bump server version to 1.0.4
+  - Updated version to 1.0.4 across package.json, server.json, and server.ts
+
+### 2026-01-07
+- **feat**: Make initial connection string optional at startup
+  - Modified `runServer` to allow server startup without a connection string
+  - Added warning message when starting without a connection string
+  - Updated error messages to guide users to use the `orcl-connect` tool
+  - Updated README with documentation for optional connection string and `orcl-connect` tool usage
 
 ### 2025-12-12
 - **chore**: Bump server version to 1.0.3
