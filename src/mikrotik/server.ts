@@ -24,9 +24,10 @@ const server = new Server(
 const prompts = [
     { id: 1, text: "mk-connect to MikroTik using host, user and password" },
     { id: 2, text: "mk-report for a comprehensive system report" },
-    { id: 3, text: "mk-print ip/route to show the routing table" },
-    { id: 4, text: "mk-print interface to list all interfaces" },
-    { id: 5, text: "mk-print log to view system logs" }
+    { id: 3, text: "mk-get ip/route to show the routing table" },
+    { id: 4, text: "mk-get interface to list all interfaces" },
+    { id: 5, text: "mk-get log to view system logs" },
+    { id: 6, text: "mk-awr audit router's security and performance" }
 ];
 
 const PromptsListRequestSchema = z.object({

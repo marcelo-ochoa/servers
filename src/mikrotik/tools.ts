@@ -22,8 +22,8 @@ export const tools = [
         },
     },
     {
-        name: "mk-print",
-        description: "Returns a JSON array with the result of a MikroTik API /print command. For exampe /ip/routes stand for /ip/route/print",
+        name: "mk-get",
+        description: "Returns a JSON array with the result of a MikroTik API /print command. For example /ip/route stand for /ip/route/print",
         inputSchema: {
             type: "object",
             properties: {
@@ -35,4 +35,13 @@ export const tools = [
             required: ["sentence"],
         },
     },
+    {
+        name: "mk-awr",
+        description: "Generates an Automatic Workload Repository (AWR) style report for MikroTik, including performance metrics, security audit, and recommendations.",
+        inputSchema: {
+            type: "object",
+            properties: {},
+        },
+    },
 ];
+

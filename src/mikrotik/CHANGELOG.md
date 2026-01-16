@@ -1,5 +1,9 @@
 ## Change Log
 
+### 2026-01-14
+- **feat**: Added `mk-awr` tool for automated performance and security reports.
+- **refactor**: Renamed `mk-print` tool to `mk-get` for better alignment with other MCP segments.
+
 ### 2026-01-08
 - **feat**: Improved login handling to correctly detect `!trap` responses
 - **docs**: Updated documentation with Docker examples and License information
