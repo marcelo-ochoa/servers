@@ -11,7 +11,7 @@ import { tools } from "./tools.js";
 const server = new Server(
     {
         name: "mikrotik-api",
-        version: "1.0.1",
+        version: "1.0.2",
     },
     {
         capabilities: {

@@ -1,8 +1,10 @@
 ## Change Log
 
-### 2026-01-14
-- **feat**: Added `mk-awr` tool for automated performance and security reports.
+### 2026-01-16
+- **feat**: Added `mk-awr` tool for automated performance and security reports including log auditing.
 - **refactor**: Renamed `mk-print` tool to `mk-get` for better alignment with other MCP segments.
+- **docs**: Added `Demos.md` with usage examples for Claude Desktop, Gemini CLI, and Antigravity.
+- **chore**: Updated version to 1.0.2 and synchronized `server.json` and `package.json`.
 
 ### 2026-01-08
 - **feat**: Improved login handling to correctly detect `!trap` responses
