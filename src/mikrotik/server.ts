@@ -3,20 +3,23 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import {
     CallToolRequestSchema,
     ListToolsRequestSchema,
+    ListResourcesRequestSchema,
+    ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
-import { callToolHandler, initializeApi } from "./handlers.js";
+import { callToolHandler, listResourcesHandler, readResourceHandler, initializeApi } from "./handlers.js";
 import { tools } from "./tools.js";
 
 const server = new Server(
     {
         name: "mikrotik-api",
-        version: "1.0.2",
+        version: "1.0.3",
     },
     {
         capabilities: {
             tools: {},
             prompts: {},
+            resources: {},
         },
     }
 );
@@ -60,6 +63,14 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
     return executeSequential(() => callToolHandler(request));
+});
+
+server.setRequestHandler(ListResourcesRequestSchema, async (request) => {
+    return executeSequential(() => listResourcesHandler(request));
+});
+
+server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+    return executeSequential(() => readResourceHandler(request));
 });
 
 export async function runServer() {

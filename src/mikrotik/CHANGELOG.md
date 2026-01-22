@@ -1,5 +1,11 @@
 ## Change Log
 
+### 2026-01-22
+- **feat**: Implemented `listResourcesHandler` and `readResourceHandler` for MikroTik interfaces as `mikrotik://interface/{name}`.
+- **feat**: Added bridge and bridge port resources as `mikrotik://bridge/{name}` and `mikrotik://bridge/{name}/{port}`.
+- **feat**: Added IP route resources as `mikrotik://route/{id}`.
+- **refactor**: Structured tool handlers and resources into separate modules for better readability and maintenance.
+
 ### 2026-01-16
 - **feat**: Added `mk-awr` tool for automated performance and security reports including log auditing.
 - **refactor**: Renamed `mk-print` tool to `mk-get` for better alignment with other MCP segments.
