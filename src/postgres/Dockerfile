@@ -1,7 +1,4 @@
-FROM node:24-alpine AS builder
-
-# Update and upgrade to fix OS-level vulnerabilities
-RUN apk update && apk upgrade --no-cache
+FROM node:slim AS builder
 
 COPY src/postgres /app
 COPY tsconfig.json /tsconfig.json
@@ -14,10 +11,10 @@ RUN npm run build
 
 RUN --mount=type=cache,target=/root/.npm-production npm ci --ignore-scripts --omit-dev
 
-FROM node:24-alpine AS release
+FROM node:slim AS release
 
 # Update and upgrade to fix OS-level vulnerabilities
-RUN apk update && apk upgrade --no-cache
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/dist /app/dist
 COPY --from=builder /app/package.json /app/package.json

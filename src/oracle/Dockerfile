@@ -1,7 +1,4 @@
-FROM node:24-alpine AS builder
-
-# Update and upgrade to fix OS-level vulnerabilities
-RUN apk update && apk upgrade --no-cache
+FROM node:slim AS builder
 
 COPY src/oracle /app
 COPY tsconfig.json /tsconfig.json
@@ -14,10 +11,7 @@ RUN npm run build
 
 RUN --mount=type=cache,target=/root/.npm-production npm ci --ignore-scripts --omit-dev
 
-FROM node:24-alpine AS release
-
-# Update and upgrade to fix OS-level vulnerabilities
-RUN apk update && apk upgrade --no-cache
+FROM node:slim AS release
 
 # Use BuildKit's automatic platform detection
 ARG TARGETARCH
@@ -27,7 +21,9 @@ ARG TARGETARCH
 # Using version 19.23 - stable and well-tested (version 23.x has issues with ORA-24960)
 # Using full 'basic' package instead of 'basiclite' as it includes encryption libraries
 # Supports both ARM64 and x86_64 architectures
-RUN apk add --no-cache libaio libnsl libc6-compat gcompat curl unzip && \
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y libaio1 libnsl2 curl unzip && \
+    rm -rf /var/lib/apt/lists/* && \
     cd /tmp && \
     # Detect architecture and set appropriate download URL
     if [ "$TARGETARCH" = "arm64" ]; then \
