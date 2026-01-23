@@ -5,9 +5,22 @@ A Read-Only MCP server implementation for interacting with MikroTik routers usin
 ## Features
 
 - **Connection Management**: Connect and authenticate with MikroTik routers.
-- **Route Monitoring**: Retrieve IP routing tables in structured JSON format.
+- **Resource Monitoring**: Dynamic access to interfaces, bridges, and routing tables via MCP resources.
 - **Protocol Support**: Works with both plain TCP (8728) and secure SSL/TLS (8729).
 - **Modern & Legacy Login**: Supports RouterOS versions prior to and after v6.43.
+
+## Resources
+
+This server exposes MikroTik entities as MCP resources for direct inspection:
+
+- **Interfaces**: `mikrotik://interface/{name}`
+  - Example: `mikrotik://interface/ether1`
+- **Bridges**: `mikrotik://bridge/{name}`
+  - Example: `mikrotik://bridge/bridge1`
+- **Bridge Ports**: `mikrotik://bridge/{bridge_name}/{interface_name}`
+  - Example: `mikrotik://bridge/bridge1/ether2`
+- **IP Routes**: `mikrotik://route/{id}`
+  - Example: `mikrotik://route/400AF317` (Note: internal IDs are used for routing entries)
 
 ## Tools
 
@@ -30,6 +43,17 @@ Example:
 4. `mk-awr`: Generates an Automatic Workload Repository (AWR) style report for MikroTik.
    - Includes performance metrics, security audit, and recommendations.
    - No input required.
+
+## Prompts
+
+The server provides several pre-defined prompts for common tasks:
+
+- **mk-connect: Connect to MikroTik**: Helps you establish a connection to your router.
+- **mk-report: System Report**: Requests a full system status and traffic report.
+- **mk-get-route: Routing Table**: Specifically asks for the current IP routing table.
+- **mk-get-interface: List Interfaces**: Specifically asks for all configured interfaces.
+- **mk-get-log: View Logs**: Requests the latest system log entries.
+- **mk-awr: Security Audit**: Initiates a full performance and security audit of the router.
 
 ### Configuration
 
