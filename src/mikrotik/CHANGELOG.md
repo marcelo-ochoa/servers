@@ -1,6 +1,9 @@
 ## Change Log
 
 ### 2026-01-22
+- **chore**: Bump server version to 1.0.4
+  - Updated version to 1.0.4 across package.json, server.json, and server.ts
+  - Refactored prompt names to be more descriptive for better CLI visibility
 - **feat**: Implemented `listResourcesHandler` and `readResourceHandler` for MikroTik interfaces as `mikrotik://interface/{name}`.
 - **feat**: Added bridge and bridge port resources as `mikrotik://bridge/{name}` and `mikrotik://bridge/{name}/{port}`.
 - **feat**: Added IP route resources as `mikrotik://route/{id}`.

@@ -15,7 +15,7 @@ import { tools } from "./tools.js";
 const server = new Server(
   {
     name: "oracle-server",
-    version: "1.0.4",
+    version: "1.0.5",
   },
   {
     capabilities: {
@@ -27,11 +27,11 @@ const server = new Server(
 );
 
 const prompts = [
-  { id: 1, text: "orcl-query select * from COUNTRIES" },
-  { id: 2, text: "orcl-explain select * from COUNTRIES" },
-  { id: 3, text: "orcl-stats COUNTRIES" },
-  { id: 4, text: "orcl-connect to Oracle using an string like host.docker.internal:1521/freepdb1 user name and password" },
-  { id: 5, text: "orcl-awr with optional sql_id, requires SELECT_CATALOG_ROLE and grant execute on DBMS_WORKLOAD_REPOSITORY package" }
+  { name: "orcl-query: Execute Query", description: "orcl-query select * from COUNTRIES" },
+  { name: "orcl-explain: Explain Query", description: "orcl-explain select * from COUNTRIES" },
+  { name: "orcl-stats: Table Statistics", description: "orcl-stats COUNTRIES" },
+  { name: "orcl-connect: Database Connection", description: "orcl-connect to Oracle using an string like host.docker.internal:1521/freepdb1 user name and password" },
+  { name: "orcl-awr: Performance Report", description: "orcl-awr with optional sql_id, requires SELECT_CATALOG_ROLE and grant execute on DBMS_WORKLOAD_REPOSITORY package" }
 ];
 
 const PromptsListRequestSchema = z.object({

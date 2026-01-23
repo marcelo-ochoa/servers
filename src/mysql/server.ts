@@ -15,7 +15,7 @@ import { tools } from "./tools.js";
 const server = new Server(
     {
         name: "mysql-server",
-        version: "1.0.4",
+        version: "1.0.5",
     },
     {
         capabilities: {
@@ -27,11 +27,11 @@ const server = new Server(
 );
 
 const prompts = [
-    { id: 1, text: "mysql-query select * from test_users" },
-    { id: 2, text: "mysql-explain select * from test_users" },
-    { id: 3, text: "mysql-stats test_users" },
-    { id: 4, text: "mysql-connect to MySQL using a string like host.docker.internal:3306/dbname user name and password" },
-    { id: 5, text: "mysql-awr for MySQL performance report similar to Oracle AWR" }
+    { name: "mysql-query: Execute Query", description: "mysql-query select * from test_users" },
+    { name: "mysql-explain: Explain Query", description: "mysql-explain select * from test_users" },
+    { name: "mysql-stats: Table Statistics", description: "mysql-stats test_users" },
+    { name: "mysql-connect: Database Connection", description: "mysql-connect to MySQL using a string like host.docker.internal:3306/dbname user name and password" },
+    { name: "mysql-awr: Performance Report", description: "mysql-awr for MySQL performance report similar to Oracle AWR" }
 ];
 
 const PromptsListRequestSchema = z.object({

@@ -1,6 +1,10 @@
 ## Change Log
 
-### 2026-01-08
+### 2026-01-22
+- **chore**: Bump server version to 1.0.5
+  - Updated version to 1.0.5 across package.json, server.json, and server.ts
+  - Refactored prompt names to be more descriptive for better CLI visibility
+
 - **chore**: Bump server version to 1.0.4
   - Updated version to 1.0.4 across package.json, server.json, and server.ts
 

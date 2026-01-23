@@ -1,7 +1,7 @@
 {
     "name": "@marcelo-ochoa/server-mikrotik",
     "mcpName": "io.github.marcelo-ochoa/mikrotik",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "repository": {
         "type": "git",
         "url": "https://github.com/marcelo-ochoa/servers.git",

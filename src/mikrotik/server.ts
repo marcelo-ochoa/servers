@@ -13,7 +13,7 @@ import { tools } from "./tools.js";
 const server = new Server(
     {
         name: "mikrotik-api",
-        version: "1.0.3",
+        version: "1.0.4",
     },
     {
         capabilities: {
@@ -25,12 +25,12 @@ const server = new Server(
 );
 
 const prompts = [
-    { id: 1, text: "mk-connect to MikroTik using host, user and password" },
-    { id: 2, text: "mk-report for a comprehensive system report" },
-    { id: 3, text: "mk-get ip/route to show the routing table" },
-    { id: 4, text: "mk-get interface to list all interfaces" },
-    { id: 5, text: "mk-get log to view system logs" },
-    { id: 6, text: "mk-awr audit router's security and performance" }
+    { name: "mk-connect: Connect to MikroTik", description: "connect to MikroTik using host, user and password" },
+    { name: "mk-report: System Report", description: "show a comprehensive system report" },
+    { name: "mk-get-route: Routing Table", description: "print ip/route to show the routing table" },
+    { name: "mk-get-interface: List Interfaces", description: "print interface to list all interfaces" },
+    { name: "mk-get-log: View Logs", description: "print log to view system logs" },
+    { name: "mk-awr: Security Audit", description: "audit router's security and performance" }
 ];
 
 const PromptsListRequestSchema = z.object({

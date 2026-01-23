@@ -15,7 +15,7 @@ import { tools } from "./tools.js";
 const server = new Server(
     {
         name: "postgres-server",
-        version: "1.0.4",
+        version: "1.0.5",
     },
     {
         capabilities: {
@@ -27,11 +27,11 @@ const server = new Server(
 );
 
 const prompts = [
-    { id: 1, text: "pg-query select * from test" },
-    { id: 2, text: "pg-explain select * from test" },
-    { id: 3, text: "pg-stats test" },
-    { id: 4, text: "pg-connect to PostgreSQL using a connection string like host.docker.internal:5432/dbname with user name and password" },
-    { id: 5, text: "pg-awr to generate a PostgreSQL performance report (requires pg_stat_statements extension)" }
+    { name: "pg-query: Execute Query", description: "pg-query select * from test" },
+    { name: "pg-explain: Explain Query", description: "pg-explain select * from test" },
+    { name: "pg-stats: Table Statistics", description: "pg-stats test" },
+    { name: "pg-connect: Database Connection", description: "pg-connect to PostgreSQL using a connection string like host.docker.internal:5432/dbname with user name and password" },
+    { name: "pg-awr: Performance Report", description: "pg-awr to generate a PostgreSQL performance report (requires pg_stat_statements extension)" }
 ];
 
 const PromptsListRequestSchema = z.object({

@@ -1,7 +1,7 @@
 {
   "name": "@marcelo-ochoa/server-postgres",
   "mcpName": "io.github.marcelo-ochoa/postgres",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "repository": {
     "type": "git",
     "url": "https://github.com/marcelo-ochoa/servers.git",
