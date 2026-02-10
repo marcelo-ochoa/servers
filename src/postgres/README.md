@@ -98,7 +98,8 @@ Note: You can still provide the connection string as a final argument if you wan
       "command": "npx",
       "args": [
         "-y",
-        "@marcelo-ochoa/server-postgres"
+        "@marcelo-ochoa/server-postgres",
+        "postgresql://localhost:5432/mydb"
       ],
       "env": {
         "PG_USER": "myuser",
@@ -159,7 +160,8 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
           "--rm",
           "-e", "PG_USER=${input:pg_user}",
           "-e", "PG_PASSWORD=${input:pg_password}",
-          "mochoa/mcp-postgres"
+          "mochoa/mcp-postgres",
+          "postgresql://localhost:5432/mydb"
         ]
       }
     }
@@ -192,7 +194,8 @@ Note: You can add an input for `pg_url` and append it to `args` if you want to c
         "command": "npx",
         "args": [
           "-y",
-          "@marcelo-ochoa/server-postgres"
+          "@marcelo-ochoa/server-postgres",
+          "postgresql://localhost:5432/mydb"
         ],
         "env": {
           "PG_USER": "${input:pg_user}",

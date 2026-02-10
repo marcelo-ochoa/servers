@@ -1,0 +1,89 @@
+# QNAP MCP Server
+
+An MCP server implementation for QNAP NAS devices, providing tools to monitor system status, manage files, and generate reports.
+
+## Tools
+
+- `qnap-connect`: Connect to a QNAP NAS and obtain a session ID.
+  - `host`: The QNAP NAS URL (e.g., `http://10.1.1.241:8080`).
+  - `username`: Your admin username.
+  - `password`: Your admin password.
+- `qnap-report`: Generate a system report including CPU, memory, disks, and volume status.
+- `qnap-dir`: List the contents of a directory.
+  - `path`: The path to list (e.g., `/Public`).
+- `qnap-file-info`: Get detailed information about a specific file.
+  - `path`: The directory path.
+  - `filename`: The name of the file.
+
+## Configuration
+
+### Environment Variables
+
+The server can use environment variables and startup arguments for automatic connection:
+
+- **`QNAP_USER`**: QNAP admin username.
+- **`QNAP_PASSWORD`**: QNAP admin password.
+
+### Startup Arguments
+
+1. **`host`**: (Optional) URL of the QNAP NAS (e.g., `http://10.1.1.241:8080`).
+
+If the host and environment variables are provided, the server will attempt to connect automatically at startup.
+
+### Usage with Claude Desktop
+
+Add the following to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "qnap": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@marcelo-ochoa/server-qnap",
+        "http://10.1.1.241:8080"
+      ],
+      "env": {
+        "QNAP_USER": "admin",
+        "QNAP_PASSWORD": "password"
+      }
+    }
+  }
+}
+```
+
+## Development
+
+```bash
+cd src/qnap
+npm install
+npm run build
+```
+
+
+## Demos
+
+See [Demos](https://github.com/marcelo-ochoa/servers/blob/main/src/qnap/Demos.md) for usage examples with Claude Desktop, Gemini CLI, and Antigravity Code Editor.
+
+## Docker
+
+Building the container:
+
+```bash
+docker build -t mochoa/mcp-qnap -f src/qnap/Dockerfile .
+```
+
+Running the container:
+
+```bash
+docker run -i --rm -e QNAP_USER=admin -e QNAP_PASSWORD=password mochoa/mcp-qnap http://10.1.1.241:8080
+```
+
+## Change Log
+
+See [Change Log](CHANGELOG.md) for the history of changes.
+
+## License
+
+MIT

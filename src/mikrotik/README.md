@@ -86,15 +86,15 @@ Add this to your `claude_desktop_config.json`:
 {
   "mcpServers": {
     "mikrotik": {
-      "command": "node",
+      "command": "npx",
       "args": [
-        "/absolute/path/to/src/mikrotik/dist/index.js",
-        "192.168.88.1",
-        "false"
+        "-y",
+        "@marcelo-ochoa/server-mikrotik",
+        "192.168.88.1"
       ],
       "env": {
-        "MK_USER": "admin",
-        "MK_PASSWORD": "mypassword"
+        "MK_USER": "ai_agent",
+        "MK_PASSWORD": "ai_password"
       }
     }
   }
