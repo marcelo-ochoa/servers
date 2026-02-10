@@ -1,7 +1,7 @@
 {
     "name": "@marcelo-ochoa/server-qnap",
     "mcpName": "io.github.marcelo-ochoa/qnap",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "An MCP server for QNAP NAS API.",
     "type": "module",
     "bin": {

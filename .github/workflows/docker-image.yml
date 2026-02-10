@@ -52,3 +52,11 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: mochoa/mcp-mikrotik:latest
+      - name: Build and push QNAP
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./src/qnap/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: mochoa/mcp-qnap:latest
