@@ -60,6 +60,8 @@ The connection string should contain only the host, port, and database informati
 - `postgresql://host:port/dbname`
 - `host:port/dbname`
 
+To enable encryption (SSL), append `?sslmode=require` to the connection string or set the `PG_SSL` environment variable to `true`.
+
 ### Usage with Claude Desktop
 
 To use this server with the Claude Desktop app, add the following configuration to the "mcpServers" section of your `claude_desktop_config.json`:

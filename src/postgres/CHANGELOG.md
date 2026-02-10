@@ -1,4 +1,13 @@
 ## Change Log
+
+### 2026-02-10
+- **feat**: Add SSL/Encryption support to PostgreSQL connections
+  - Modified `initializePool` in `db.ts` to support `sslmode` in connection strings
+  - Added support for `PG_SSL=true` environment variable to enforce encryption
+  - Updated `pg.Pool` configuration to allow self-signed certificates (`rejectUnauthorized: false`) for cloud compatibility
+  - Updated `pg-connect` tool description and `README.md` with encryption setup instructions
+- **chore**: Bump server version to 1.0.6
+  - Updated version to 1.0.6 across package.json, server.json, and server.ts
  
 ### 2026-01-22
 - **chore**: Bump server version to 1.0.5

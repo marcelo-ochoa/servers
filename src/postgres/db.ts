@@ -20,6 +20,7 @@ export async function initializePool(connectionString: string) {
     let host: string;
     let port: number;
     let database: string;
+    let useSsl = process.env.PG_SSL === "true";
 
     try {
         // Try parsing as URL first
@@ -28,15 +29,24 @@ export async function initializePool(connectionString: string) {
             host = url.hostname;
             port = url.port ? parseInt(url.port) : 5432;
             database = url.pathname.slice(1); // Remove leading '/'
+            const sslmode = url.searchParams.get('sslmode');
+            if (sslmode && sslmode !== 'disable') {
+                useSsl = true;
+            }
         } else {
+            // Split connection string from potential query parameters
+            const [baseConn, queryStr] = connectionString.split('?');
             // Parse format: host:port/dbname
-            const match = connectionString.match(/^([^:]+):(\d+)\/(.+)$/);
+            const match = baseConn.match(/^([^:]+):(\d+)\/(.+)$/);
             if (!match) {
                 throw new Error("Invalid connection string format. Expected: host:port/dbname or postgresql://host:port/dbname");
             }
             host = match[1];
             port = parseInt(match[2]);
             database = match[3];
+            if (queryStr && queryStr.includes('sslmode=') && !queryStr.includes('sslmode=disable')) {
+                useSsl = true;
+            }
         }
     } catch (err) {
         console.error("Error parsing connection string:", err);
@@ -49,6 +59,7 @@ export async function initializePool(connectionString: string) {
         host,
         port,
         database,
+        ssl: useSsl ? { rejectUnauthorized: false } : undefined,
     });
 
     // Test connection
