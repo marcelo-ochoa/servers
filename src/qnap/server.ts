@@ -27,7 +27,7 @@ export class QnapServer {
         this.server = new Server(
             {
                 name: "qnap-mcp-server",
-                version: "1.0.1",
+                version: "1.0.2",
             },
             {
                 capabilities: {

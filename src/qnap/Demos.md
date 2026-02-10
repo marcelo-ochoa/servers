@@ -146,6 +146,49 @@ Using this sample settings.json file at ~/.gemini/ directory:
 - qnap-report
 - analyze backup files in several subdirectories of `/backup/stacks` on the QNAP NAS. For each subdirectory compare the two most recent backups (daily or weekly, identified by filenames like `alldb_backup-2.sql.gz` for weekly and `alldb_backup-09.sql.gz` for daily). The comparison should be based on file size, considering backups with similar sizes as correct. Generate a report indicating the status (OK or Error) for each directory based on this comparison.
 
+### qnap-report JSON Output Example
+
+The `qnap-report` tool now returns a structured JSON object, making it easy for AI models to analyze the system state.
+
+```json
+{
+  "timestamp": "2026-02-10T15:29:38.124Z",
+  "host": "http://10.1.1.241:8080",
+  "diskHealth": [
+    {
+      "alias": "3.5\" SATA HDD 1",
+      "model": "WD20EFRX-68EUZN0",
+      "serial": "WD-WCC4M1RXUCRS",
+      "capacity": "1.82 TB",
+      "health": "OK",
+      "temperature": "39°C"
+    },
+    ...
+  ],
+  "resourceUsage": {
+    "cpuUsage": "21.5 %",
+    "memory": {
+      "totalMB": 1000,
+      "freeMB": 529,
+      "usedMB": 471,
+      "usedPercent": "47.1%"
+    },
+    "uptime": "29 days, 0 hours, 27 minutes",
+    "systemTemperature": "39°C"
+  },
+  "storageInfo": [
+    {
+      "name": "Backup",
+      "totalGB": "1218.42",
+      "usedGB": "1029.01",
+      "freeGB": "189.42",
+      "usedPercent": "84.5%"
+    },
+    ...
+  ]
+}
+```
+
 ## Using Antigravity Code Editor
 
 Put this in `~/.gemini/antigravity/mcp_config.json`

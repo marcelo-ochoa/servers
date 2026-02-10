@@ -112,10 +112,6 @@ Note: You can still provide the connection string as a final argument if you wan
 
 As usual the code of this extension is at [GitHub](https://github.com/marcelo-ochoa/servers), feel free to suggest changes and make contributions, note that I am a beginner developer of React and TypeScript so contributions to make this UI better are welcome.
 
-## License
-
-This MCP server is licensed under the [MIT License](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/LICENSE). This means you are free to use, modify, and distribute the software, subject to the terms and conditions of the MIT License. For more details, please see the LICENSE file in the project repository.
-
 ## Compared to SQLcl MCP server
 
 Using SQLcl Docker extension you could register a connection using:
@@ -147,3 +143,7 @@ after that using this registration:
 ```
 
 Just replace above Demo prompts instead of "orcl-query" tool use "run-sql".
+
+## 📜 License
+
+This project is licensed under the Apache License, Version 2.0 for new contributions, with existing code under MIT - see the [LICENSE](https://github.com/marcelo-ochoa/servers/blob/main/src/oracle/LICENSE) file for details.

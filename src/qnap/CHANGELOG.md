@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.2] - 2026-02-10
+
+### Added
+- **Enhanced qnap-report Tool**: Completely rewritten in native TypeScript for better performance and reliability.
+  - Replaced Python-based report collector with native Node.js implementation.
+  - Returns structured **JSON format** instead of plain text, perfect for AI parsing.
+  - Added detailed **Disk Health** (model, serial, capacity, temperature, health status).
+  - Added granular **Resource Usage** (CPU load, memory breakdown, uptime, system temperature).
+  - Added comprehensive **Storage Info** (volume labels, total/used/free space, usage percentages).
+
 ## [1.0.1] - 2026-02-09
 
 ### Changed

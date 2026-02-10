@@ -227,6 +227,7 @@ docker build -t mochoa/mcp-postgres -f src/postgres/Dockerfile .
 
 As usual the code of this extension is at [GitHub](https://github.com/marcelo-ochoa/servers), feel free to suggest changes and make contributions, note that I am a beginner developer of React and TypeScript so contributions to make this UI better are welcome.
 
-## License
+## 📜 License
 
-This MCP server is licensed under the [MIT License](https://github.com/marcelo-ochoa/servers/blob/main/src/postgres/LICENSE). This means you are free to use, modify, and distribute the software, subject to the terms and conditions of the MIT License. For more details, please see the LICENSE file in the project repository.
+This project is licensed under the Apache License, Version 2.0 for new contributions, with existing code under MIT - see the [LICENSE](https://github.com/marcelo-ochoa/servers/blob/main/src/postgres/LICENSE) file for details.
+

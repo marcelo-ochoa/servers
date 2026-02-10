@@ -8,7 +8,7 @@ An MCP server implementation for QNAP NAS devices, providing tools to monitor sy
   - `host`: The QNAP NAS URL (e.g., `http://10.1.1.241:8080`).
   - `username`: Your admin username.
   - `password`: Your admin password.
-- `qnap-report`: Generate a system report including CPU, memory, disks, and volume status.
+- `qnap-report`: Generate a system report in **JSON format** including CPU, memory, disks, and volume status. Perfect for AI analysis and automated monitoring.
 - `qnap-dir`: List the contents of a directory.
   - `path`: The path to list (e.g., `/Public`).
 - `qnap-file-info`: Get detailed information about a specific file.
@@ -82,8 +82,8 @@ docker run -i --rm -e QNAP_USER=admin -e QNAP_PASSWORD=password mochoa/mcp-qnap 
 
 ## Change Log
 
-See [Change Log](CHANGELOG.md) for the history of changes.
+See [Change Log](https://github.com/marcelo-ochoa/servers/blob/main/src/qnap/CHANGELOG.md) for the history of changes.
 
-## License
+## 📜 License
 
-MIT
+This project is licensed under the Apache License, Version 2.0 for new contributions, with existing code under MIT - see the [LICENSE](https://github.com/marcelo-ochoa/servers/blob/main/src/qnap/LICENSE) file for details.

@@ -7,12 +7,12 @@
         "source": "github",
         "subfolder": "src/qnap"
     },
-    "version": "1.0.1",
+    "version": "1.0.2",
     "packages": [
         {
             "registryType": "npm",
             "identifier": "@marcelo-ochoa/server-qnap",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "transport": {
                 "type": "stdio"
             }

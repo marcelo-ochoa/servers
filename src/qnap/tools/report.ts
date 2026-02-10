@@ -1,45 +1,181 @@
 import { CallToolRequest } from "@modelcontextprotocol/sdk/types.js";
 import { getNasHost, getNasSid, fetchWithTimeout } from "./connect.js";
 
-export async function reportHandler(request: CallToolRequest) {
-    const nas_host = getNasHost();
-    const nas_sid = getNasSid();
+/**
+ * Parses disk health information from QNAP XML response.
+ */
+function parseDiskHealth(xml: string): any[] {
+    const disks: any[] = [];
+    // Extract individual disk entries
+    const entryRegex = /<entry>(.*?)<\/entry>/gs;
+    let match;
 
-    if (!nas_host || !nas_sid) {
+    while ((match = entryRegex.exec(xml)) !== null) {
+        const entry = match[1];
+
+        const alias = entry.match(/<Disk_Alias><!\[CDATA\[(.*?)\]\]><\/Disk_Alias>/)?.[1] || "";
+        const health = entry.match(/<Health><!\[CDATA\[(.*?)\]\]><\/Health>/)?.[1] || "";
+        const capacity = entry.match(/<Capacity><!\[CDATA\[(.*?)\]\]><\/Capacity>/)?.[1] || "";
+        const tempC = entry.match(/<oC><!\[CDATA\[(.*?)\]\]><\/oC>/)?.[1] || "";
+        const model = entry.match(/<Model><!\[CDATA\[(.*?)\]\]><\/Model>/)?.[1] || "";
+        const serial = entry.match(/<Serial><!\[CDATA\[(.*?)\]\]><\/Serial>/)?.[1] || "";
+
+        if (alias) {
+            disks.push({
+                alias,
+                model,
+                serial,
+                capacity,
+                health,
+                temperature: tempC ? `${tempC}°C` : ""
+            });
+        }
+    }
+    return disks;
+}
+
+/**
+ * Parses resource usage information from QNAP XML response.
+ */
+function parseResourceUsage(xml: string): any {
+    const cpuUsage = xml.match(/<cpu_usage><!\[CDATA\[(.*?)\]\]><\/cpu_usage>/)?.[1]?.trim() || "";
+    const memTotalStr = xml.match(/<total_memory><!\[CDATA\[(.*?)\]\]><\/total_memory>/)?.[1];
+    const memFreeStr = xml.match(/<free_memory><!\[CDATA\[(.*?)\]\]><\/free_memory>/)?.[1];
+
+    let memory: any = null;
+    if (memTotalStr && memFreeStr) {
+        const total = parseFloat(memTotalStr);
+        const free = parseFloat(memFreeStr);
+        const used = total - free;
+        const usedPct = total > 0 ? (used / total) * 100 : 0;
+        memory = {
+            totalMB: total,
+            freeMB: free,
+            usedMB: used,
+            usedPercent: usedPct.toFixed(1) + "%"
+        };
+    }
+
+    const day = xml.match(/<uptime_day><!\[CDATA\[(.*?)\]\]><\/uptime_day>/)?.[1];
+    const hour = xml.match(/<uptime_hour><!\[CDATA\[(.*?)\]\]><\/uptime_hour>/)?.[1];
+    const min = xml.match(/<uptime_min><!\[CDATA\[(.*?)\]\]><\/uptime_min>/)?.[1];
+
+    let uptime = "";
+    if (day !== undefined && hour !== undefined && min !== undefined) {
+        uptime = `${day} days, ${hour} hours, ${min} minutes`;
+    }
+
+    const sysTemp = xml.match(/<sys_tempc>([^<]+)<\/sys_tempc>/)?.[1];
+
+    return {
+        cpuUsage,
+        memory,
+        uptime,
+        systemTemperature: sysTemp ? `${sysTemp}°C` : ""
+    };
+}
+
+/**
+ * Parses storage/volume information from QNAP XML response.
+ */
+function parseStorageInfo(xml: string): any[] {
+    const volumes: any[] = [];
+
+    // Create mapping of volumeValue to volumeLabel
+    const volLabels: Record<string, string> = {};
+    const volRegex = /<volume>(.*?)<\/volume>/gs;
+    let volMatch;
+    while ((volMatch = volRegex.exec(xml)) !== null) {
+        const vol = volMatch[1];
+        const val = vol.match(/<volumeValue><!\[CDATA\[(.*?)\]\]><\/volumeValue>/)?.[1];
+        const label = vol.match(/<volumeLabel><!\[CDATA\[(.*?)\]\]><\/volumeLabel>/)?.[1];
+        if (val && label) {
+            volLabels[val] = label;
+        }
+    }
+
+    // Parse volume usage
+    const useRegex = /<volumeUse>(.*?)<\/volumeUse>/gs;
+    let useMatch;
+    while ((useMatch = useRegex.exec(xml)) !== null) {
+        const volUse = useMatch[1];
+        const val = volUse.match(/<volumeValue><!\[CDATA\[(.*?)\]\]><\/volumeValue>/)?.[1];
+        const totalStr = volUse.match(/<total_size><!\[CDATA\[(.*?)\]\]><\/total_size>/)?.[1];
+        const freeStr = volUse.match(/<free_size><!\[CDATA\[(.*?)\]\]><\/free_size>/)?.[1];
+
+        if (val) {
+            const name = volLabels[val] || `Volume ${val}`;
+            let usage: any = { name };
+
+            if (totalStr && freeStr) {
+                try {
+                    const total = parseFloat(totalStr);
+                    const free = parseFloat(freeStr);
+                    const used = total - free;
+                    const usedPct = total > 0 ? (used / total) * 100 : 0;
+
+                    usage = {
+                        ...usage,
+                        totalGB: (total / (1024 ** 3)).toFixed(2),
+                        usedGB: (used / (1024 ** 3)).toFixed(2),
+                        freeGB: (free / (1024 ** 3)).toFixed(2),
+                        usedPercent: usedPct.toFixed(1) + "%"
+                    };
+                } catch {
+                    usage = { ...usage, totalBytes: totalStr, freeBytes: freeStr };
+                }
+            }
+            volumes.push(usage);
+        }
+    }
+    return volumes;
+}
+
+/**
+ * Handle qnap-report tool call.
+ */
+export async function reportHandler(request: CallToolRequest) {
+    const host = getNasHost();
+    const sid = getNasSid();
+
+    if (!host || !sid) {
         return {
-            content: [{ type: "text", text: "Not connected to QNAP NAS. Use qnap-connect first." }],
+            content: [{ type: "text", text: JSON.stringify({ error: "Not connected to QNAP NAS. Use qnap-connect first." }) }],
             isError: true
         };
     }
 
     try {
-        // Fetch system info to get model details
-        const dc = Date.now();
-        const url = `${nas_host}/cgi-bin/sys/sysRequest.cgi?subfunc=sys_info&sid=${nas_sid}&_dc=${dc}`;
-        const response = await fetchWithTimeout(url);
-        const text = await response.text();
+        const results: any = {
+            timestamp: new Date().toISOString(),
+            host: host
+        };
 
-        const modelMatch = text.match(/<displayModelName><!\[CDATA\[([^\]]*)\]\]><\/displayModelName>/);
-        const modelName = modelMatch ? modelMatch[1] : "Unknown QNAP Model";
+        // 1. Disk Health
+        const diskUrl = `${host}/cgi-bin/disk/qsmart.cgi?func=all_hd_data&sid=${sid}`;
+        const diskResp = await fetchWithTimeout(diskUrl);
+        const diskXml = await diskResp.text();
+        results.diskHealth = parseDiskHealth(diskXml);
 
-        // Extract IP from host
-        const hostUrl = new URL(nas_host);
+        // 2. Resource Usage
+        const resUrl = `${host}/cgi-bin/management/manaRequest.cgi?subfunc=sysinfo&hd=no&multicpu=1&sid=${sid}`;
+        const resResp = await fetchWithTimeout(resUrl);
+        const resXml = await resResp.text();
+        results.resourceUsage = parseResourceUsage(resXml);
 
-        const report = [
-            `### QNAP Connection Report`,
-            `- **Model Name**: ${modelName}`,
-            `- **IP Address**: ${hostUrl.hostname}`,
-            `- **Connected User**: ${process.env.QNAP_USER || "admin"}`,
-            `- **Access URL**: ${nas_host}`
-        ].join('\n');
+        // 3. Storage Info
+        const storageUrl = `${host}/cgi-bin/management/chartReq.cgi?chart_func=disk_usage&disk_select=all&include=all&sid=${sid}`;
+        const storageResp = await fetchWithTimeout(storageUrl);
+        const storageXml = await storageResp.text();
+        results.storageInfo = parseStorageInfo(storageXml);
 
         return {
-            content: [{ type: "text", text: report }],
+            content: [{ type: "text", text: JSON.stringify(results, null, 2) }],
             isError: false,
         };
     } catch (error: any) {
         return {
-            content: [{ type: "text", text: `Error generating report: ${error.message}` }],
+            content: [{ type: "text", text: JSON.stringify({ error: `Error generating report: ${error.message}` }) }],
             isError: true
         };
     }
