@@ -64,7 +64,7 @@ Sample prompts using above server.
 
 ### Backup Analysis Report Example
 
-Busing information about files of sub-folders from qnap-dir /backup/stacks
+Prompt: Using information about files of sub-folders from qnap-dir /backup/stacks
    - ayudarg
    - glpi
    - invop
@@ -77,8 +77,9 @@ Busing information about files of sub-folders from qnap-dir /backup/stacks
    - piexa
    - web
    - yact
-   files into above sub-dirs are backups daily or weekly, for example: alldb_backup-2.sql.gz (meaning last backup of week 2 of current month) alldb_backup-09.sql.gz (meaning last daily backup) in some folder there are weekly backups and other are daily backups. please compare last (weekly/daily) with the previous one sorted descending by modification date using the size information of the file. A correct backup will be similar in size, for example 31.41 Mb and 31.33Mb. Make report with directories with status of the backups showing OK or Error based on explained failed.
+   files into above sub-dirs are backups daily or weekly, for example: alldb_backup-2.sql.gz (meaning last backup of week 2 of current month) alldb_backup-09.sql.gz (meaning last daily backup) in some folder there are weekly backups and other are daily backups. please compare last (weekly/daily) with the previous one sorted descending by modification date using the size information of the file. A correct backup will be similar in size, for example 31.41 Mb and 31.33Mb. Make report in tabular format including the directory name, the two most recent backup files with their modification date and size, the size difference and the status (OK or Error) based on explained failed.
 
+Response:
 I have verified the two most recent backup files for each directory, comparing their timestamps and file sizes. "Similar size" is interpreted as a difference of less than 5%, which indicates a successful backup chain.
 
 #### QNAP Backup Status Report
