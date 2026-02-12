@@ -8,8 +8,8 @@ An MCP server implementation for QNAP NAS devices, providing tools to monitor sy
   - `host`: The QNAP NAS URL (e.g., `http://10.1.1.241:8080`).
   - `username`: Your admin username.
   - `password`: Your admin password.
-- `qnap-report`: Generate a system report in **JSON format** including CPU, memory, disks, and volume status. Perfect for AI analysis and automated monitoring.
-- `qnap-dir`: List the contents of a directory.
+  - `qnap-report`: Generate a comprehensive **Markdown system report** including CPU, memory, powered by `toon` tables for disks and volumes. Perfect for both human reading and AI analysis.
+  - `qnap-dir`: List the contents of a directory in a **professional tabular format**, automatically sorted by modification date.
   - `path`: The path to list (e.g., `/Public`).
 - `qnap-file-info`: Get detailed information about a specific file.
   - `path`: The directory path.

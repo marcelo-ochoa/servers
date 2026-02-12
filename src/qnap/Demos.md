@@ -147,48 +147,33 @@ Using this sample settings.json file at ~/.gemini/ directory:
 - qnap-report
 - analyze backup files in several subdirectories of `/backup/stacks` on the QNAP NAS. For each subdirectory compare the two most recent backups (daily or weekly, identified by filenames like `alldb_backup-2.sql.gz` for weekly and `alldb_backup-09.sql.gz` for daily). The comparison should be based on file size, considering backups with similar sizes as correct. Generate a report indicating the status (OK or Error) for each directory based on this comparison.
 
-### qnap-report JSON Output Example
+### qnap-report Output Example
 
-The `qnap-report` tool now returns a structured JSON object, making it easy for AI models to analyze the system state.
+The `qnap-report` tool now returns a professionally formatted Markdown report with tabular data, making it easy for both humans and AI models to read.
 
-```json
-{
-  "timestamp": "2026-02-10T15:29:38.124Z",
-  "host": "http://10.1.1.241:8080",
-  "diskHealth": [
-    {
-      "alias": "3.5\" SATA HDD 1",
-      "model": "WD20EFRX-68EUZN0",
-      "serial": "WD-WCC4M1RXUCRS",
-      "capacity": "1.82 TB",
-      "health": "OK",
-      "temperature": "39°C"
-    },
-    ...
-  ],
-  "resourceUsage": {
-    "cpuUsage": "21.5 %",
-    "memory": {
-      "totalMB": 1000,
-      "freeMB": 529,
-      "usedMB": 471,
-      "usedPercent": "47.1%"
-    },
-    "uptime": "29 days, 0 hours, 27 minutes",
-    "systemTemperature": "39°C"
-  },
-  "storageInfo": [
-    {
-      "name": "Backup",
-      "totalGB": "1218.42",
-      "usedGB": "1029.01",
-      "freeGB": "189.42",
-      "usedPercent": "84.5%"
-    },
-    ...
-  ]
-}
-```
+# QNAP System Report
+**Timestamp:** 2/12/2026, 12:21 PM
+**Host:** http://10.254.0.158:8080
+
+## Resource Usage
+- **CPU Usage:** 7.9 %
+- **Memory:** 1262MB / 4075MB (31.0% used)
+- **Uptime:** 29 days, 2 hours, 3 minutes
+- **System Temperature:** 34°C
+
+## Disk Health
+| Alias | Model | Serial | Capacity | Health | Temperature |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| 3.5" SATA HDD 1 | WD40EFAX-68JH4N1 | WD-WXV2A8296XZ5 | 3.64 TB | OK | 35°C |
+| 3.5" SATA HDD 2 | WD40EFAX-68JH4N1 | WD-WXW2A82FPRD1 | 3.64 TB | OK | 34°C |
+| ... | ... | ... | ... | ... | ... |
+
+## Storage Information
+| Name | Total | Used | Free | Usage |
+| :--- | :--- | :--- | :--- | :--- |
+| System | 503.32 GB | 27.14 GB | 476.18 GB | 5.4% |
+| Docker | 793.05 GB | 258.59 GB | 534.46 GB | 32.6% |
+| ... | ... | ... | ... | ... | ... |
 
 ## Using Antigravity Code Editor
 

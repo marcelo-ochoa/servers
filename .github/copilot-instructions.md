@@ -1,19 +1,19 @@
 ---
-description: A Model Context Protocol server that provides read-only access to Oracle Database
-applyTo: "src/{oracle,mysql,postgres}/**"
+description: A Model Context Protocol server that provides read-only access to Oracle, MySQL, PostgreSQL, QNAP NAS and MikroTik RouterOS
+applyTo: "src/{oracle,mysql,postgres,qnap,mikrotik}/**"
 ---
-# AI Agent Project Instructions: Oracle Server
+# AI Agent Project Instructions: MCP Servers
 
 ## Overview
-This project is part of a modular AI Agent system, with each module providing a specific capability. The `src/oracle` directory implements the Oracle server, which enables the AI Agent to interact with Oracle databases and perform related operations.
+This project is part of a modular AI Agent system, with each module providing a specific capability. The `src/` directory implements various MCP servers, enabling the AI Agent to interact with databases (Oracle, MySQL, PostgreSQL), storage (QNAP NAS), and network devices (MikroTik RouterOS).
 
-## Technology Stack for `src/oracle`, `src/mysql` and `src/postgres`
+## Technology Stack
 
 - **Programming Language:** TypeScript (Node.js)
 - **Package Management:** npm (Node Package Manager)
 - **Build System:** TypeScript compiler (`tsc`)
 - **Containerization:** Docker (see `Dockerfile`)
-- **Configuration:** Project-specific configuration files (e.g., `tsconfig.json`, `package.json`)
+- **Configuration:** Project-specific configuration files (e.g., `tsconfig.json`, `package.json`, `server.json`)
 
 ## TypeScript Guidelines
 - Use TypeScript for all new code
@@ -31,16 +31,6 @@ This project is part of a modular AI Agent system, with each module providing a 
 - `handlers.ts`: Request handlers for tools and resources
 - `tools.ts`: Tool definitions (query, explain, stats, connect, awr)
 - `tools/`: Individual tool implementations
-  - `query.ts`: Execute read-only SQL queries
-  - `explain.ts`: Generate execution plans
-  - `stats.ts`: Retrieve table statistics
-  - `connect.ts`: Database connection management
-  - `awr.ts`: Automatic Workload Repository reports
-- `package.json`: Dependencies and scripts
-- `server.json`: MCP server metadata and registry configuration
-- `tsconfig.json`: TypeScript configuration
-- `Dockerfile`: Docker image build instructions
-- `README.md`: Comprehensive usage and configuration guide
 
 #### MySQL Server (`src/mysql/`)
 - `index.ts`: Main entry point for the MySQL server logic
@@ -49,16 +39,6 @@ This project is part of a modular AI Agent system, with each module providing a 
 - `handlers.ts`: Request handlers for tools and resources
 - `tools.ts`: Tool definitions (mysql-query, mysql-explain, mysql-stats, mysql-connect, mysql-awr)
 - `tools/`: Individual tool implementations
-  - `query.ts`: Execute read-only SQL queries
-  - `explain.ts`: Generate execution plans
-  - `stats.ts`: Retrieve table statistics
-  - `connect.ts`: Database connection management
-  - `awr.ts`: MySQL performance reports (AWR-style)
-- `package.json`: Dependencies and scripts
-- `server.json`: MCP server metadata and registry configuration
-- `tsconfig.json`: TypeScript configuration
-- `Dockerfile`: Docker image build instructions
-- `README.md`: Comprehensive usage and configuration guide
 
 #### PostgreSQL Server (`src/postgres/`)
 - `index.ts`: Main entry point for the PostgreSQL server logic
@@ -67,25 +47,30 @@ This project is part of a modular AI Agent system, with each module providing a 
 - `handlers.ts`: Request handlers for tools and resources
 - `tools.ts`: Tool definitions (pg-query, pg-explain, pg-stats, pg-connect, pg-awr)
 - `tools/`: Individual tool implementations
-  - `query.ts`: Execute read-only SQL queries
-  - `explain.ts`: Generate execution plans
-  - `stats.ts`: Retrieve table statistics
-  - `connect.ts`: Database connection management
-  - `awr.ts`: PostgreSQL performance reports (AWR-style)
-- `package.json`: Dependencies and scripts
-- `server.json`: MCP server metadata and registry configuration
-- `tsconfig.json`: TypeScript configuration
-- `Dockerfile`: Docker image build instructions
-- `README.md`: Comprehensive usage and configuration guide
+
+#### QNAP Server (`src/qnap/`)
+- `index.ts`: Main entry point for the QNAP server logic
+- `server.ts`: Server initialization and MCP protocol setup
+- `handlers.ts`: Request handlers for tools and resources
+- `tools.ts`: Tool definitions (qnap-connect, qnap-report, qnap-dir, qnap-file-info)
+- `tools/`: Individual tool implementations
+
+#### MikroTik Server (`src/mikrotik/`)
+- `index.ts`: Main entry point for the MikroTik server logic
+- `server.ts`: Server initialization and MCP protocol setup
+- `handlers.ts`: Request handlers for tools and resources
+- `tools.ts`: Tool definitions (mk-connect, mk-report, mk-get, mk-awr)
+- `tools/`: Individual tool implementations
 
 ## How It Works
-- The Oracle server is written in TypeScript and is designed to be run as a Node.js application.
-- It can be built and run locally or inside a Docker container for deployment.
-- The server exposes endpoints or interfaces for the AI Agent to query Oracle databases, execute SQL, and retrieve results.
+- The servers are written in TypeScript and are designed to be run as Node.js applications.
+- They can be built and run locally or inside a Docker container for deployment.
+- Each server uses the Model Context Protocol (MCP) to expose tools and resources to AI Agents.
 
 ## Development Workflow
 1. **Install Dependencies:**
    ```sh
+   cd src/[module]
    npm install
    ```
 2. **Build the Project:**
@@ -97,6 +82,8 @@ This project is part of a modular AI Agent system, with each module providing a 
    npx -y @marcelo-ochoa/server-oracle localhost:1521/freepdb1
    npx -y @marcelo-ochoa/server-mysql localhost:3306/mydb
    npx -y @marcelo-ochoa/server-postgres localhost:5432/postgres
+   npx -y @marcelo-ochoa/server-qnap http://nas-ip:8080
+   npx -y @marcelo-ochoa/server-mikrotik 192.168.88.1
    ```
 4. **Run with Docker:**
    Build the Docker image and run the container:
@@ -104,13 +91,15 @@ This project is part of a modular AI Agent system, with each module providing a 
    docker build -t mochoa/mcp-oracle -f src/oracle/Dockerfile .
    docker build -t mochoa/mcp-mysql -f src/mysql/Dockerfile .
    docker build -t mochoa/mcp-postgres -f src/postgres/Dockerfile .
+   docker build -t mochoa/mcp-qnap -f src/qnap/Dockerfile .
+   docker build -t mochoa/mcp-mikrotik -f src/mikrotik/Dockerfile .
    ```
 
 ## Notes
 - Ensure you have Node.js and npm installed for local development.
 - For Docker-based workflows, ensure Docker is installed and running.
-- The Oracle server may require environment variables or configuration for database connection (see `README.md` for details).
+- Each server may require specific environment variables for credentials (e.g., `QNAP_USER`, `MK_PASSWORD`, `PG_PASSWORD`).
 
 ## Additional Resources
-- See the `README.md` in `src/oracle`, `src/mysql` and `src/postgres` for usage, configuration, and advanced options.
-- Refer to the root project `README.md` for information about the overall AI Agent system and other modules.
+- See the `README.md` in each module directory for specific usage, configuration, and advanced options.
+- Refer to the root project `README.md` for information about the overall system.

@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.3] - 2026-02-12
+
+### Added
+- **Professional Tabular Output**: Standardized `qnap-dir` and `qnap-report` to use the `toon` encoding format for high-quality tabular data.
+- **Enhanced qnap-report**:
+  - Now returns a professional **Markdown report** instead of raw JSON.
+  - Includes Disk Health and Storage Information in styled tables.
+  - Improved formatting for resource usage (CPU, Memory, Uptime).
+- **Improved qnap-dir**:
+  - Automatically **sorts files by modification date** (newest first).
+  - Robust directory detection across different QNAP firmware versions (handling `isfolder`, `is_dir`, and `filetype` inconsistencies).
+  - Human-friendly file sizes (KB, MB, GB).
+
 ## [1.0.2] - 2026-02-10
 
 ### Added

@@ -1,4 +1,5 @@
 import { CallToolRequest } from "@modelcontextprotocol/sdk/types.js";
+import { encode } from "@toon-format/toon";
 import { getNasHost, getNasSid, fetchWithTimeout } from "./connect.js";
 
 /**
@@ -6,7 +7,6 @@ import { getNasHost, getNasSid, fetchWithTimeout } from "./connect.js";
  */
 function parseDiskHealth(xml: string): any[] {
     const disks: any[] = [];
-    // Extract individual disk entries
     const entryRegex = /<entry>(.*?)<\/entry>/gs;
     let match;
 
@@ -22,12 +22,12 @@ function parseDiskHealth(xml: string): any[] {
 
         if (alias) {
             disks.push({
-                alias,
-                model,
-                serial,
-                capacity,
-                health,
-                temperature: tempC ? `${tempC}°C` : ""
+                Alias: alias,
+                Model: model || "-",
+                Serial: serial || "-",
+                Capacity: capacity || "-",
+                Health: health || "Unknown",
+                Temperature: tempC ? `${tempC}°C` : "-"
             });
         }
     }
@@ -80,8 +80,6 @@ function parseResourceUsage(xml: string): any {
  */
 function parseStorageInfo(xml: string): any[] {
     const volumes: any[] = [];
-
-    // Create mapping of volumeValue to volumeLabel
     const volLabels: Record<string, string> = {};
     const volRegex = /<volume>(.*?)<\/volume>/gs;
     let volMatch;
@@ -94,7 +92,6 @@ function parseStorageInfo(xml: string): any[] {
         }
     }
 
-    // Parse volume usage
     const useRegex = /<volumeUse>(.*?)<\/volumeUse>/gs;
     let useMatch;
     while ((useMatch = useRegex.exec(xml)) !== null) {
@@ -105,7 +102,7 @@ function parseStorageInfo(xml: string): any[] {
 
         if (val) {
             const name = volLabels[val] || `Volume ${val}`;
-            let usage: any = { name };
+            let usage: any = { Name: name };
 
             if (totalStr && freeStr) {
                 try {
@@ -116,13 +113,13 @@ function parseStorageInfo(xml: string): any[] {
 
                     usage = {
                         ...usage,
-                        totalGB: (total / (1024 ** 3)).toFixed(2),
-                        usedGB: (used / (1024 ** 3)).toFixed(2),
-                        freeGB: (free / (1024 ** 3)).toFixed(2),
-                        usedPercent: usedPct.toFixed(1) + "%"
+                        Total: (total / (1024 ** 3)).toFixed(2) + " GB",
+                        Used: (used / (1024 ** 3)).toFixed(2) + " GB",
+                        Free: (free / (1024 ** 3)).toFixed(2) + " GB",
+                        Usage: usedPct.toFixed(1) + "%"
                     };
                 } catch {
-                    usage = { ...usage, totalBytes: totalStr, freeBytes: freeStr };
+                    usage = { ...usage, Total: totalStr, Free: freeStr };
                 }
             }
             volumes.push(usage);
@@ -140,42 +137,56 @@ export async function reportHandler(request: CallToolRequest) {
 
     if (!host || !sid) {
         return {
-            content: [{ type: "text", text: JSON.stringify({ error: "Not connected to QNAP NAS. Use qnap-connect first." }) }],
+            content: [{ type: "text", text: "Not connected to QNAP NAS. Use qnap-connect first." }],
             isError: true
         };
     }
 
     try {
-        const results: any = {
-            timestamp: new Date().toISOString(),
-            host: host
-        };
-
         // 1. Disk Health
         const diskUrl = `${host}/cgi-bin/disk/qsmart.cgi?func=all_hd_data&sid=${sid}`;
         const diskResp = await fetchWithTimeout(diskUrl);
         const diskXml = await diskResp.text();
-        results.diskHealth = parseDiskHealth(diskXml);
+        const diskHealth = parseDiskHealth(diskXml);
 
         // 2. Resource Usage
         const resUrl = `${host}/cgi-bin/management/manaRequest.cgi?subfunc=sysinfo&hd=no&multicpu=1&sid=${sid}`;
         const resResp = await fetchWithTimeout(resUrl);
         const resXml = await resResp.text();
-        results.resourceUsage = parseResourceUsage(resXml);
+        const resourceUsage = parseResourceUsage(resXml);
 
         // 3. Storage Info
         const storageUrl = `${host}/cgi-bin/management/chartReq.cgi?chart_func=disk_usage&disk_select=all&include=all&sid=${sid}`;
         const storageResp = await fetchWithTimeout(storageUrl);
         const storageXml = await storageResp.text();
-        results.storageInfo = parseStorageInfo(storageXml);
+        const storageInfo = parseStorageInfo(storageXml);
+
+        // Format the output as a readable Markdown report
+        let output = `# QNAP System Report\n`;
+        output += `**Timestamp:** ${new Date().toLocaleString()}\n`;
+        output += `**Host:** ${host}\n\n`;
+
+        output += `## Resource Usage\n`;
+        output += `- **CPU Usage:** ${resourceUsage.cpuUsage}\n`;
+        if (resourceUsage.memory) {
+            output += `- **Memory:** ${resourceUsage.memory.usedMB.toFixed(0)}MB / ${resourceUsage.memory.totalMB.toFixed(0)}MB (${resourceUsage.memory.usedPercent} used)\n`;
+        }
+        output += `- **Uptime:** ${resourceUsage.uptime}\n`;
+        output += `- **System Temperature:** ${resourceUsage.systemTemperature}\n\n`;
+
+        output += `## Disk Health\n`;
+        output += encode(diskHealth) + "\n\n";
+
+        output += `## Storage Information\n`;
+        output += encode(storageInfo);
 
         return {
-            content: [{ type: "text", text: JSON.stringify(results, null, 2) }],
+            content: [{ type: "text", text: output }],
             isError: false,
         };
     } catch (error: any) {
         return {
-            content: [{ type: "text", text: JSON.stringify({ error: `Error generating report: ${error.message}` }) }],
+            content: [{ type: "text", text: `Error generating report: ${error.message}` }],
             isError: true
         };
     }
