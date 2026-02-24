@@ -1,8 +1,25 @@
 {
     "name": "@marcelo-ochoa/server-qnap",
     "mcpName": "io.github.marcelo-ochoa/qnap",
-    "version": "1.0.3",
+    "version": "1.0.4",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/marcelo-ochoa/servers.git",
+        "subfolder": "src/qnap"
+    },
     "description": "An MCP server for QNAP NAS API.",
+    "keywords": [
+        "read-only-mcp",
+        "qnap",
+        "nas",
+        "ai-agent",
+        "llm-tool",
+        "rag"
+    ],
+    "license": "MIT",
+    "author": "Marcelo Fabian Ochoa",
+    "homepage": "https://modelcontextprotocol.io",
+    "bugs": "https://github.com/marcelo-ochoa/servers/issues",
     "type": "module",
     "bin": {
         "mcp-server-qnap": "dist/index.js"

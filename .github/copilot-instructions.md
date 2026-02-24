@@ -85,7 +85,7 @@ This project is part of a modular AI Agent system, with each module providing a 
    npx -y @marcelo-ochoa/server-qnap http://nas-ip:8080
    npx -y @marcelo-ochoa/server-mikrotik 192.168.88.1
    ```
-4. **Run with Docker:**
+4. **Build with Docker:**
    Build the Docker image and run the container:
    ```sh
    docker build -t mochoa/mcp-oracle -f src/oracle/Dockerfile .
@@ -94,6 +94,23 @@ This project is part of a modular AI Agent system, with each module providing a 
    docker build -t mochoa/mcp-qnap -f src/qnap/Dockerfile .
    docker build -t mochoa/mcp-mikrotik -f src/mikrotik/Dockerfile .
    ```
+5. **Publish to ModelContextProtocol:**
+   ```sh
+   mcp-publisher login github
+   mcp-publisher publish
+   ```
+6. **Publish to npm:**
+   ```sh
+   npm login
+   npm publish
+   ```
+7. **Test with Antigravity Code Editor:**
+   Build with Docker as is described in step 4.
+   ```sh
+   docker build -t mochoa/mcp-oracle -f src/oracle/Dockerfile .
+   # manually wait until user reloads MCP servers
+   ```
+   If antigravity is running, MCP Servers need to be reloaded.
 
 ## Notes
 - Ensure you have Node.js and npm installed for local development.
