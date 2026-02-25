@@ -62,6 +62,16 @@ Sample prompts using above server.
 - qnap-file-info /Public/test.txt
 - analyze backup files in several subdirectories of `/backup/stacks` on the QNAP NAS. For each subdirectory compare the two most recent backups (daily or weekly, identified by filenames like `alldb_backup-2.sql.gz` for weekly and `alldb_backup-09.sql.gz` for daily). The comparison should be based on file size, considering backups with similar sizes as correct. Generate a report indicating the status (OK or Error) for each directory based on this comparison.
 
+### Using Resources
+
+You can interact with QNAP resources directly:
+
+- `list resources from qnap`
+- `read resource qnap://10.1.1.241:8080/volume/1`
+- `show health for all disks on qnap using resources`
+- `check storage usage for Docker volume using qnap resources`
+
+
 ### Backup Analysis Report Example
 
 Prompt: Using information about files of sub-folders from qnap-dir /backup/stacks

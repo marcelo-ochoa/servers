@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.5] - 2026-02-25
+
+### Added
+- **MCP Resources Support**: Introduced native support for MCP Resources.
+  - Exposes QNAP **Disks** as resources: `qnap://[ip]:[port]/disk/[disk-id]`.
+  - Exposes QNAP **Volumes** as resources: `qnap://[ip]:[port]/volume/[volume-id]`.
+  - Allows AI models to directly read structured JSON data for disk health and volume usage.
+- **Enhanced Storage Metadata**: Updated internal parsing logic to include volume IDs, enabling more reliable resource addressing.
+- **Resource Handlers**: Implemented `listResourcesHandler` and `readResourceHandler` for full MCP compatibility.
+
 ## [1.0.4] - 2026-02-23
 
 ### Changed

@@ -3,10 +3,12 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import {
     CallToolRequestSchema,
     ListToolsRequestSchema,
+    ListResourcesRequestSchema,
+    ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { tools } from "./tools.js";
-import { callToolHandler, initializeApi } from "./handlers.js";
+import { callToolHandler, listResourcesHandler, readResourceHandler, initializeApi } from "./handlers.js";
 
 const prompts = [
     { name: "qnap-connect: Connect to QNAP NAS", description: "connect to QNAP NAS using host, username and password" },
@@ -27,12 +29,13 @@ export class QnapServer {
         this.server = new Server(
             {
                 name: "qnap-mcp-server",
-                version: "1.0.4",
+                version: "1.0.5",
             },
             {
                 capabilities: {
                     tools: {},
                     prompts: {},
+                    resources: {},
                 },
             }
         );
@@ -55,6 +58,14 @@ export class QnapServer {
 
         this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
             return await callToolHandler(request);
+        });
+
+        this.server.setRequestHandler(ListResourcesRequestSchema, async (request) => {
+            return await listResourcesHandler(request);
+        });
+
+        this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+            return await readResourceHandler(request);
         });
     }
 

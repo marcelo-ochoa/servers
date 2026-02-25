@@ -15,6 +15,17 @@ An MCP server implementation for QNAP NAS devices, providing tools to monitor sy
   - `path`: The directory path.
   - `filename`: The name of the file.
 
+## Resources
+
+The server exposes QNAP system components as MCP Resources, providing structured JSON data for monitoring:
+
+- **Disks**: `qnap://[host]:[port]/disk/[disk-id]`
+  - Real-time disk health, model, serial, and temperature.
+- **Volumes**: `qnap://[host]:[port]/volume/[volume-id]`
+  - Detailed storage usage, capacity, and volume names.
+
+These resources allow AI models to monitor NAS health and storage levels without manually calling reporting tools.
+
 ## Configuration
 
 ### Environment Variables
@@ -48,6 +59,29 @@ Add the following to your `claude_desktop_config.json`:
         "QNAP_USER": "admin",
         "QNAP_PASSWORD": "password"
       }
+    }
+  }
+}
+```
+
+using docker image
+
+```json
+{
+  "mcpServers": {
+    "qnap": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "QNAP_USER=admin",
+        "-e",
+        "QNAP_PASSWORD=password",
+        "mochoa/mcp-qnap",
+        "http://10.1.1.241:8080"
+      ]
     }
   }
 }

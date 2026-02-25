@@ -5,7 +5,7 @@ import { getNasHost, getNasSid, fetchWithTimeout } from "./connect.js";
 /**
  * Parses disk health information from QNAP XML response.
  */
-function parseDiskHealth(xml: string): any[] {
+export function parseDiskHealth(xml: string): any[] {
     const disks: any[] = [];
     const entryRegex = /<entry>(.*?)<\/entry>/gs;
     let match;
@@ -37,7 +37,7 @@ function parseDiskHealth(xml: string): any[] {
 /**
  * Parses resource usage information from QNAP XML response.
  */
-function parseResourceUsage(xml: string): any {
+export function parseResourceUsage(xml: string): any {
     const cpuUsage = xml.match(/<cpu_usage><!\[CDATA\[(.*?)\]\]><\/cpu_usage>/)?.[1]?.trim() || "";
     const memTotalStr = xml.match(/<total_memory><!\[CDATA\[(.*?)\]\]><\/total_memory>/)?.[1];
     const memFreeStr = xml.match(/<free_memory><!\[CDATA\[(.*?)\]\]><\/free_memory>/)?.[1];
@@ -78,7 +78,7 @@ function parseResourceUsage(xml: string): any {
 /**
  * Parses storage/volume information from QNAP XML response.
  */
-function parseStorageInfo(xml: string): any[] {
+export function parseStorageInfo(xml: string): any[] {
     const volumes: any[] = [];
     const volLabels: Record<string, string> = {};
     const volRegex = /<volume>(.*?)<\/volume>/gs;
@@ -102,7 +102,7 @@ function parseStorageInfo(xml: string): any[] {
 
         if (val) {
             const name = volLabels[val] || `Volume ${val}`;
-            let usage: any = { Name: name };
+            let usage: any = { Id: val, Name: name };
 
             if (totalStr && freeStr) {
                 try {

@@ -1,8 +1,9 @@
-import { CallToolRequest } from "@modelcontextprotocol/sdk/types.js";
+import { CallToolRequest, ListResourcesRequest, ReadResourceRequest } from "@modelcontextprotocol/sdk/types.js";
 import { connectHandler, initializeApi } from "./tools/connect.js";
 import { reportHandler } from "./tools/report.js";
 import { dirHandler } from "./tools/dir.js";
 import { fileInfoHandler } from "./tools/file_info.js";
+import { listResourcesHandler, readResourceHandler } from "./resources.js";
 
 const toolHandlers: Record<string, (request: CallToolRequest) => Promise<any>> = {
     "qnap-connect": connectHandler,
@@ -19,5 +20,5 @@ export const callToolHandler = async (request: CallToolRequest) => {
     throw new Error(`Unknown tool: ${request.params.name}`);
 };
 
-export { initializeApi };
+export { initializeApi, listResourcesHandler, readResourceHandler };
 
