@@ -21,7 +21,14 @@ export async function fileInfoHandler(request: CallToolRequest) {
     }
 
     try {
-        const url = `${nas_host}/cgi-bin/filemanager/utilRequest.cgi?func=stat&sid=${nas_sid}&path=${path}&file_total=1&file_name=${filename}`;
+        const params = new URLSearchParams({
+            func: 'stat',
+            sid: nas_sid,
+            path: path,
+            file_total: '1',
+            file_name: filename
+        });
+        const url = `${nas_host}/cgi-bin/filemanager/utilRequest.cgi?${params.toString()}`;
         const response = await fetchWithTimeout(url);
         const text = await response.text();
 

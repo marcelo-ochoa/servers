@@ -144,19 +144,35 @@ export async function reportHandler(request: CallToolRequest) {
 
     try {
         // 1. Disk Health
-        const diskUrl = `${host}/cgi-bin/disk/qsmart.cgi?func=all_hd_data&sid=${sid}`;
+        const diskParams = new URLSearchParams({
+            func: 'all_hd_data',
+            sid: sid
+        });
+        const diskUrl = `${host}/cgi-bin/disk/qsmart.cgi?${diskParams.toString()}`;
         const diskResp = await fetchWithTimeout(diskUrl);
         const diskXml = await diskResp.text();
         const diskHealth = parseDiskHealth(diskXml);
 
         // 2. Resource Usage
-        const resUrl = `${host}/cgi-bin/management/manaRequest.cgi?subfunc=sysinfo&hd=no&multicpu=1&sid=${sid}`;
+        const resParams = new URLSearchParams({
+            subfunc: 'sysinfo',
+            hd: 'no',
+            multicpu: '1',
+            sid: sid
+        });
+        const resUrl = `${host}/cgi-bin/management/manaRequest.cgi?${resParams.toString()}`;
         const resResp = await fetchWithTimeout(resUrl);
         const resXml = await resResp.text();
         const resourceUsage = parseResourceUsage(resXml);
 
         // 3. Storage Info
-        const storageUrl = `${host}/cgi-bin/management/chartReq.cgi?chart_func=disk_usage&disk_select=all&include=all&sid=${sid}`;
+        const storageParams = new URLSearchParams({
+            chart_func: 'disk_usage',
+            disk_select: 'all',
+            include: 'all',
+            sid: sid
+        });
+        const storageUrl = `${host}/cgi-bin/management/chartReq.cgi?${storageParams.toString()}`;
         const storageResp = await fetchWithTimeout(storageUrl);
         const storageXml = await storageResp.text();
         const storageInfo = parseStorageInfo(storageXml);

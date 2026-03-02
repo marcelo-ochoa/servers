@@ -93,7 +93,11 @@ export async function connectHandler(request: CallToolRequest) {
     }
 
     const b64_pwd = Buffer.from(password).toString('base64');
-    const url = `${host}/cgi-bin/authLogin.cgi?user=${username}&pwd=${b64_pwd}`;
+    const params = new URLSearchParams({
+        user: username,
+        pwd: b64_pwd
+    });
+    const url = `${host}/cgi-bin/authLogin.cgi?${params.toString()}`;
 
     try {
         const response = await fetchWithTimeout(url);
@@ -106,18 +110,18 @@ export async function connectHandler(request: CallToolRequest) {
         if (sid) {
             setNasConnection(host, sid);
             return {
-                content: [{ type: "text", text: `Connected successfully to ${host}. SID: ${sid}` }],
+                content: [{ type: "text", text: `Connected successfully to ${host}.` }],
                 isError: false,
             };
         } else {
             return {
-                content: [{ type: "text", text: `Login failed. Response: ${text}` }],
+                content: [{ type: "text", text: "Login failed. Please check your credentials." }],
                 isError: true
             };
         }
     } catch (error: any) {
         return {
-            content: [{ type: "text", text: `Error connecting to QNAP: ${error.message}` }],
+            content: [{ type: "text", text: "Error connecting to QNAP NAS. Please verify the host and network connectivity." }],
             isError: true
         };
     }

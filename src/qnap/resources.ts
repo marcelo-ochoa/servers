@@ -18,13 +18,23 @@ export const listResourcesHandler = async (request: ListResourcesRequest) => {
 
     try {
         // 1. Fetch Disk Info
-        const diskUrl = `${host}/cgi-bin/disk/qsmart.cgi?func=all_hd_data&sid=${sid}`;
+        const diskParams = new URLSearchParams({
+            func: 'all_hd_data',
+            sid: sid
+        });
+        const diskUrl = `${host}/cgi-bin/disk/qsmart.cgi?${diskParams.toString()}`;
         const diskResp = await fetchWithTimeout(diskUrl);
         const diskXml = await diskResp.text();
         const disks = parseDiskHealth(diskXml);
 
         // 2. Fetch Storage Info
-        const storageUrl = `${host}/cgi-bin/management/chartReq.cgi?chart_func=disk_usage&disk_select=all&include=all&sid=${sid}`;
+        const storageParams = new URLSearchParams({
+            chart_func: 'disk_usage',
+            disk_select: 'all',
+            include: 'all',
+            sid: sid
+        });
+        const storageUrl = `${host}/cgi-bin/management/chartReq.cgi?${storageParams.toString()}`;
         const storageResp = await fetchWithTimeout(storageUrl);
         const storageXml = await storageResp.text();
         const storageInfo = parseStorageInfo(storageXml);
@@ -75,7 +85,11 @@ export const readResourceHandler = async (request: ReadResourceRequest) => {
         const diskMatch = uri.match(/^qnap:\/\/[^\/]+\/disk\/(.+)$/);
         if (diskMatch) {
             const alias = decodeURIComponent(diskMatch[1]);
-            const diskUrl = `${host}/cgi-bin/disk/qsmart.cgi?func=all_hd_data&sid=${sid}`;
+            const diskParams = new URLSearchParams({
+                func: 'all_hd_data',
+                sid: sid
+            });
+            const diskUrl = `${host}/cgi-bin/disk/qsmart.cgi?${diskParams.toString()}`;
             const diskResp = await fetchWithTimeout(diskUrl);
             const diskXml = await diskResp.text();
             const disks = parseDiskHealth(diskXml);
@@ -91,7 +105,13 @@ export const readResourceHandler = async (request: ReadResourceRequest) => {
         const volumeMatch = uri.match(/^qnap:\/\/[^\/]+\/volume\/(.+)$/);
         if (volumeMatch) {
             const idOrName = decodeURIComponent(volumeMatch[1]);
-            const storageUrl = `${host}/cgi-bin/management/chartReq.cgi?chart_func=disk_usage&disk_select=all&include=all&sid=${sid}`;
+            const storageParams = new URLSearchParams({
+                chart_func: 'disk_usage',
+                disk_select: 'all',
+                include: 'all',
+                sid: sid
+            });
+            const storageUrl = `${host}/cgi-bin/management/chartReq.cgi?${storageParams.toString()}`;
             const storageResp = await fetchWithTimeout(storageUrl);
             const storageXml = await storageResp.text();
             const storageInfo = parseStorageInfo(storageXml);

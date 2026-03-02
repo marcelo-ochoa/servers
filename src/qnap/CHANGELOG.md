@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.6] - 2026-03-02
+
+### Changed
+- **Improved API Security**: Switched to `URLSearchParams` for safe URL construction across all tools and resources, preventing potential encoding issues.
+- **Enhanced Connection Feedback**: Improved error handling in `qnap-connect` and removed sensitive session information (SID) from the output.
+- **Improved Error Messaging**: Standardized error responses to be more user-friendly and informative.
+
 ## [1.0.5] - 2026-02-25
 
 ### Added

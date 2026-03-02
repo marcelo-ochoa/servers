@@ -22,7 +22,14 @@ export async function dirHandler(request: CallToolRequest) {
     }
 
     try {
-        const url = `${nas_host}/cgi-bin/filemanager/utilRequest.cgi?func=get_list&path=${path}&sid=${nas_sid}&limit=100&start=0`;
+        const params = new URLSearchParams({
+            func: 'get_list',
+            path: path,
+            sid: nas_sid,
+            limit: '100',
+            start: '0'
+        });
+        const url = `${nas_host}/cgi-bin/filemanager/utilRequest.cgi?${params.toString()}`;
         const response = await fetchWithTimeout(url);
         const data = await response.json() as any;
 
