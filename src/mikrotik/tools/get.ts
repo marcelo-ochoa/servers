@@ -14,7 +14,7 @@ export const getHandler = async (request: CallToolRequest) => {
     const currentApi = getApi();
     if (!currentApi) {
         return {
-            content: [{ type: "text", text: "Not connected. Call mk-connect tool first." }],
+            content: [{ type: "text", text: "Not connected to MikroTik. Use mk-connect first." }],
             isError: true,
         };
     }

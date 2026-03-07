@@ -8,7 +8,7 @@ export async function fileInfoHandler(request: CallToolRequest) {
 
     if (!nas_host || !nas_sid) {
         return {
-            content: [{ type: "text", text: "Not connected to QNAP NAS. Use qnap-connect first." }],
+            content: [{ type: "text", text: "Not connected to QNAP. Use qnap-connect first." }],
             isError: true
         };
     }

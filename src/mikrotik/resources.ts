@@ -1,10 +1,10 @@
-import { ListResourcesRequest, ReadResourceRequest } from "@modelcontextprotocol/sdk/types.js";
+import { ListResourcesRequest, ReadResourceRequest, McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import { getApi } from "./db.js";
 
 export const listResourcesHandler = async (request: ListResourcesRequest) => {
     const currentApi = getApi();
     if (!currentApi) {
-        throw new Error("Not connected. Call mk-connect tool first.");
+        return { resources: [] };
     }
 
     try {
@@ -71,7 +71,7 @@ export const readResourceHandler = async (request: ReadResourceRequest) => {
     const { uri } = request.params;
     const currentApi = getApi();
     if (!currentApi) {
-        throw new Error("Not connected. Call mk-connect tool first.");
+        throw new McpError(ErrorCode.InvalidRequest, "Not connected to MikroTik. Use mk-connect first.");
     }
 
     try {

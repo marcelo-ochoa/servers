@@ -51,6 +51,10 @@ export async function initializePool(connectionString: string) {
   }
 }
 
+export function isPoolInitialized(): boolean {
+  return pool !== undefined;
+}
+
 export function getPool(): oracledb.Pool {
   if (!pool) {
     throw new Error("Oracle connection pool not initialized. Use orcl-connect tool first.");

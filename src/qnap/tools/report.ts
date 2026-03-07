@@ -137,7 +137,7 @@ export async function reportHandler(request: CallToolRequest) {
 
     if (!host || !sid) {
         return {
-            content: [{ type: "text", text: "Not connected to QNAP NAS. Use qnap-connect first." }],
+            content: [{ type: "text", text: "Not connected to QNAP. Use qnap-connect first." }],
             isError: true
         };
     }

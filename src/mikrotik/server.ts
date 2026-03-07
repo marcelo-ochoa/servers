@@ -13,7 +13,7 @@ import { tools } from "./tools.js";
 const server = new Server(
     {
         name: "mikrotik-api",
-        version: "1.0.4",
+        version: "1.0.5",
     },
     {
         capabilities: {

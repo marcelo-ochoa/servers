@@ -1,4 +1,4 @@
-import { ListResourcesRequest, ReadResourceRequest } from "@modelcontextprotocol/sdk/types.js";
+import { ListResourcesRequest, ReadResourceRequest, McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import { getNasHost, getNasSid, fetchWithTimeout } from "./tools/connect.js";
 import { parseDiskHealth, parseStorageInfo } from "./tools/report.js";
 
@@ -11,7 +11,7 @@ export const listResourcesHandler = async (request: ListResourcesRequest) => {
     const sid = getNasSid();
 
     if (!host || !sid) {
-        throw new Error("Not connected to QNAP NAS. Use qnap-connect first.");
+        return { resources: [] };
     }
 
     const hostPort = getHostPort(host);
@@ -75,7 +75,7 @@ export const readResourceHandler = async (request: ReadResourceRequest) => {
     const sid = getNasSid();
 
     if (!host || !sid) {
-        throw new Error("Not connected to QNAP NAS. Use qnap-connect first.");
+        throw new McpError(ErrorCode.InvalidRequest, "Not connected to QNAP. Use qnap-connect first.");
     }
 
     const hostPort = getHostPort(host);

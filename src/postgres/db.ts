@@ -71,6 +71,10 @@ export async function initializePool(connectionString: string) {
     resourceBaseUrl = url;
 }
 
+export function isPoolInitialized(): boolean {
+    return pool !== undefined;
+}
+
 export function getPool(): pg.Pool {
     if (!pool) {
         throw new Error("Postgres connection pool not initialized. Use pg-connect tool first.");

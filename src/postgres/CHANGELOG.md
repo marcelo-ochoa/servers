@@ -1,5 +1,11 @@
 ## Change Log
 
+### 2026-03-07
+- **chore**: Bump server version to 1.0.7
+  - Updated version to 1.0.7 across package.json, server.json, and server.ts
+  - Refactored resources into separate `resources.ts` for better modularity.
+
+
 ### 2026-02-10
 - **feat**: Add SSL/Encryption support to PostgreSQL connections
   - Modified `initializePool` in `db.ts` to support `sslmode` in connection strings

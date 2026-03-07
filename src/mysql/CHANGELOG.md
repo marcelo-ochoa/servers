@@ -1,5 +1,11 @@
 ## Change Log
 
+### 2026-03-07
+- **chore**: Bump server version to 1.0.6
+  - Updated version to 1.0.6 across package.json, server.json, and server.ts
+  - Refactored resources into separate `resources.ts` for better modularity.
+
+
 ### 2026-01-22
 - **chore**: Bump server version to 1.0.5
   - Updated version to 1.0.5 across package.json, server.json, and server.ts
