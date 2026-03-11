@@ -1,30 +1,15 @@
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-    CallToolRequestSchema,
-    ListResourcesRequestSchema,
-    ListResourceTemplatesRequestSchema,
-    ListToolsRequestSchema,
-    ReadResourceRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { initializePool } from "./db.js";
 import { listResourcesHandler, readResourceHandler, callToolHandler } from "./handlers.js";
 import { tools } from "./tools.js";
 
-const server = new Server(
-    {
-        name: "mysql-server",
-        version: "1.0.6",
-    },
-    {
-        capabilities: {
-            resources: {},
-            tools: {},
-            prompts: {}, // Add this line to indicate support for prompts
-        },
-    },
-);
+// Create server instance
+const server = new McpServer({
+    name: "mysql-server",
+    version: "1.0.7",
+});
 
 const prompts = [
     { name: "mysql-query: Execute Query", description: "mysql-query select * from test_users" },
@@ -34,33 +19,69 @@ const prompts = [
     { name: "mysql-awr: Performance Report", description: "mysql-awr for MySQL performance report similar to Oracle AWR" }
 ];
 
-const PromptsListRequestSchema = z.object({
-    method: z.literal("prompts/list"),
-    params: z.object({}),
-});
+// Register Prompts
+server.registerPrompt("mysql-prompts", {
+    description: "List available MySQL prompts"
+}, async () => ({
+    messages: [
+        {
+            role: "assistant",
+            content: {
+                type: "text",
+                text: "Available MySQL prompts:\n" + prompts.map(p => `- ${p.name}: ${p.description}`).join("\n")
+            }
+        }
+    ]
+}));
 
-server.setRequestHandler(PromptsListRequestSchema, async () => {
-    return {
-        prompts,
-    };
+// Register Resource Templates
+const resourceTemplate = new ResourceTemplate("mysql://{database}/{table_name}/schema", { 
+    list: async () => listResourcesHandler({} as any) 
 });
+server.registerResource(
+    "Table Schema",
+    resourceTemplate,
+    { description: "Schema information for a MySQL database table including column names and data types" },
+    async (uri) => {
+        return readResourceHandler({ params: { uri: uri.href } } as any);
+    }
+);
 
-server.setRequestHandler(ListResourceTemplatesRequestSchema, async () => {
-    return {
-        resourceTemplates: [
-            {
-                uriTemplate: "mysql://{database}/{table_name}/schema",
-                name: "Table Schema",
-                description: "Schema information for a MySQL database table including column names and data types",
-            },
-        ],
-    };
+// Register Tools
+tools.forEach(tool => {
+    // Basic mapping of JSON schema to Zod for simple cases
+    let inputSchema: any = z.object({});
+    if (tool.inputSchema && tool.inputSchema.properties) {
+        const shape: Record<string, any> = {};
+        for (const [key, prop] of Object.entries(tool.inputSchema.properties)) {
+            let field: any = z.any();
+            if ((prop as any).type === "string") {
+                field = z.string();
+            }
+            if ((prop as any).description) {
+                field = field.describe((prop as any).description);
+            }
+            if (tool.inputSchema.required && !tool.inputSchema.required.includes(key)) {
+                field = field.optional();
+            } else if (!tool.inputSchema.required) {
+                field = field.optional();
+            }
+            shape[key] = field;
+        }
+        inputSchema = z.object(shape);
+    }
+
+    server.registerTool(
+        tool.name,
+        {
+            description: tool.description,
+            inputSchema: inputSchema
+        },
+        async (args: any) => {
+            return callToolHandler({ params: { name: tool.name, arguments: args } } as any);
+        }
+    );
 });
-
-server.setRequestHandler(ListResourcesRequestSchema, listResourcesHandler);
-server.setRequestHandler(ReadResourceRequestSchema, readResourceHandler);
-server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
-server.setRequestHandler(CallToolRequestSchema, callToolHandler);
 
 export async function runServer() {
     const args = process.argv.slice(2);

@@ -200,7 +200,6 @@ Using this sample settings.json file at ~/.gemini/ directory:
 ### Sample prompts with Gemini CLI
 
 - connect to postgresql://host.docker.internal:5432/postgres using postgres as user and pg_2025 as password using postgres mcp server
-
 - pg-query SELECT c.country_name, l.city, COUNT(d.department_id)
   FROM countries c
   JOIN locations l ON c.country_id = l.country_id
@@ -210,15 +209,10 @@ Using this sample settings.json file at ~/.gemini/ directory:
      GROUP BY e.department_id
      HAVING COUNT(e.department_id) > 5)
   GROUP BY c.country_name, l.city
-
 - pg-explain the execution plan
-
 - visualize above execution plan in text mode
-
 - pg-stats of countries, locations and departments
-
 - based on above table and index stats rewrite above query with a better execution plan
-
 - visualize original and rewritten execution plan
 
 ## Using Antigravity Code Editor

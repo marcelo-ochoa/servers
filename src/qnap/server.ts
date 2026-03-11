@@ -1,74 +1,101 @@
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-    CallToolRequestSchema,
-    ListToolsRequestSchema,
-    ListResourcesRequestSchema,
-    ReadResourceRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { tools } from "./tools.js";
 import { callToolHandler, listResourcesHandler, readResourceHandler, initializeApi } from "./handlers.js";
 
-const prompts = [
+const server = new McpServer({
+    name: "qnap-mcp-server",
+    version: "1.0.8",
+});
+
+const promptsData = [
     { name: "qnap-connect: Connect to QNAP NAS", description: "connect to QNAP NAS using host, username and password" },
     { name: "qnap-report: System Report", description: "show a comprehensive system report with CPU, memory, and disk status" },
     { name: "qnap-dir: List Directory", description: "list contents of a directory on the QNAP NAS" },
     { name: "qnap-file-info: File Information", description: "get detailed information about a specific file" }
 ];
 
-const PromptsListRequestSchema = z.object({
-    method: z.literal("prompts/list"),
-    params: z.object({}),
+// Register Prompts
+server.registerPrompt("qnap-prompts", {
+    description: "List available QNAP prompts"
+}, async () => ({
+    messages: [
+        {
+            role: "assistant",
+            content: {
+                type: "text",
+                text: "Available QNAP prompts:\n" + promptsData.map(p => `- ${p.name}: ${p.description}`).join("\n")
+            }
+        }
+    ]
+}));
+
+// Register Resource Templates
+const diskTemplate = new ResourceTemplate("qnap://{host}/disk/{id}", { 
+    list: async () => listResourcesHandler({} as any) 
+});
+const volumeTemplate = new ResourceTemplate("qnap://{host}/volume/{id}", { 
+    list: async () => listResourcesHandler({} as any) 
+});
+
+server.registerResource(
+    "Disk Info",
+    diskTemplate,
+    { description: "Information about a specific disk on the QNAP NAS" },
+    async (uri: URL) => {
+        return readResourceHandler({ params: { uri: uri.toString() } } as any);
+    }
+);
+
+server.registerResource(
+    "Volume Info",
+    volumeTemplate,
+    { description: "Information about a specific volume on the QNAP NAS" },
+    async (uri: URL) => {
+        return readResourceHandler({ params: { uri: uri.toString() } } as any);
+    }
+);
+
+// Register Tools
+tools.forEach((tool: any) => {
+    // Basic mapping of JSON schema to Zod for simple cases
+    let inputSchema: any = z.object({});
+    if (tool.inputSchema && tool.inputSchema.properties) {
+        const shape: Record<string, any> = {};
+        for (const [key, prop] of Object.entries(tool.inputSchema.properties)) {
+            let field: any = z.any();
+            if ((prop as any).type === "string") {
+                field = z.string();
+            }
+            
+            if ((prop as any).description) {
+                field = field.describe((prop as any).description);
+            }
+            
+            if (tool.inputSchema.required && !(tool.inputSchema.required as string[]).includes(key)) {
+                field = field.optional();
+            } else if (!tool.inputSchema.required) {
+                field = field.optional();
+            }
+            shape[key] = field;
+        }
+        inputSchema = z.object(shape);
+    }
+
+    server.registerTool(
+        tool.name,
+        {
+            description: tool.description,
+            inputSchema: inputSchema
+        },
+        async (args: any) => {
+            return callToolHandler({ params: { name: tool.name, arguments: args } } as any);
+        }
+    );
 });
 
 export class QnapServer {
-    private server: Server;
-
-    constructor() {
-        this.server = new Server(
-            {
-                name: "qnap-mcp-server",
-                version: "1.0.7",
-            },
-            {
-                capabilities: {
-                    tools: {},
-                    prompts: {},
-                    resources: {},
-                },
-            }
-        );
-
-        this.setupHandlers();
-
-        this.server.onerror = (error) => console.error("[MCP Error]", error);
-    }
-
-    private setupHandlers() {
-        this.server.setRequestHandler(PromptsListRequestSchema, async () => {
-            return {
-                prompts,
-            };
-        });
-
-        this.server.setRequestHandler(ListToolsRequestSchema, async () => ({
-            tools: tools,
-        }));
-
-        this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
-            return await callToolHandler(request);
-        });
-
-        this.server.setRequestHandler(ListResourcesRequestSchema, async (request) => {
-            return await listResourcesHandler(request);
-        });
-
-        this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-            return await readResourceHandler(request);
-        });
-    }
-
     async run() {
         const args = process.argv.slice(2);
         const host = args[0];
@@ -85,12 +112,12 @@ export class QnapServer {
         }
 
         const transport = new StdioServerTransport();
-        await this.server.connect(transport);
+        await server.connect(transport);
         console.error("QNAP MCP server running on stdio");
 
         process.stdin.on("close", () => {
             console.error("QNAP MCP Server closed");
-            this.server.close();
+            server.close();
             process.exit(0);
         });
     }

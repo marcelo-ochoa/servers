@@ -45,14 +45,22 @@ export const readResourceHandler = async (request: ReadResourceRequest) => {
 
     return await withConnection(async (connection) => {
         const result = await connection.execute<{ METADATA: string }>(
-            `select dbms_developer.get_metadata (name => UPPER(:tableName)) as metadata from dual`, [tableName], { outFormat: oracledb.OUT_FORMAT_OBJECT });
+            `select json_serialize(dbms_developer.get_metadata (name => UPPER(:tableName))) as metadata from dual`, 
+            [tableName], 
+            { 
+                outFormat: oracledb.OUT_FORMAT_OBJECT,
+                fetchInfo: { "METADATA": { type: oracledb.STRING } }
+            }
+        );
+
+        const metadata = result.rows?.[0]?.METADATA || "{}";
 
         return {
             contents: [
                 {
                     uri: request.params.uri,
                     mimeType: "application/json",
-                    text: JSON.stringify(result.rows?.[0]?.METADATA, null, 2),
+                    text: metadata,
                 },
             ],
             isError: false,

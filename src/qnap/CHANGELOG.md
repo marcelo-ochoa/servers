@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.8] - 2026-03-11
+
+### Changed
+- **chore**: Bump server version to 1.0.8
+  - Updated version to 1.0.8 across package.json, server.json, and server.ts
+  - Migrated to `McpServer` API from deprecated `Server` class
+  - Implemented `ResourceTemplate` for dynamic resource discovery
+
+
 ## [1.0.7] - 2026-03-07
 
 ### Changed

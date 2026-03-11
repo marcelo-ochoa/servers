@@ -78,7 +78,7 @@ export const readResourceHandler = async (request: ReadResourceRequest) => {
         // Handle interface resource
         const ifaceMatch = uri.match(/^mikrotik:\/\/interface\/(.+)$/);
         if (ifaceMatch) {
-            const name = ifaceMatch[1];
+            const name = decodeURIComponent(ifaceMatch[1]);
             const replies = await currentApi.talk(["/interface/print"]);
             const item = replies.filter((r) => r.command === "!re").map((r) => r.attributes).find(i => i.name === name);
             if (!item) throw new Error(`Interface not found: ${name}`);
@@ -90,8 +90,8 @@ export const readResourceHandler = async (request: ReadResourceRequest) => {
         // Handle bridge port resource (check this first because it's more specific than bridge)
         const portMatch = uri.match(/^mikrotik:\/\/bridge\/([^\/]+)\/(.+)$/);
         if (portMatch) {
-            const bridgeName = portMatch[1];
-            const portName = portMatch[2];
+            const bridgeName = decodeURIComponent(portMatch[1]);
+            const portName = decodeURIComponent(portMatch[2]);
             const replies = await currentApi.talk(["/interface/bridge/port/print"]);
             const item = replies.filter((r) => r.command === "!re").map((r) => r.attributes).find(i => i.bridge === bridgeName && i.interface === portName);
             if (!item) throw new Error(`Bridge port not found: ${portName} on ${bridgeName}`);
@@ -103,7 +103,7 @@ export const readResourceHandler = async (request: ReadResourceRequest) => {
         // Handle bridge resource
         const bridgeMatch = uri.match(/^mikrotik:\/\/bridge\/(.+)$/);
         if (bridgeMatch) {
-            const name = bridgeMatch[1];
+            const name = decodeURIComponent(bridgeMatch[1]);
             const replies = await currentApi.talk(["/interface/bridge/print"]);
             const item = replies.filter((r) => r.command === "!re").map((r) => r.attributes).find(i => i.name === name);
             if (!item) throw new Error(`Bridge not found: ${name}`);
@@ -115,7 +115,7 @@ export const readResourceHandler = async (request: ReadResourceRequest) => {
         // Handle route resource
         const routeMatch = uri.match(/^mikrotik:\/\/route\/(.+)$/);
         if (routeMatch) {
-            const rawId = routeMatch[1];
+            const rawId = decodeURIComponent(routeMatch[1]);
             const id = rawId.startsWith('*') ? rawId : '*' + rawId;
             const replies = await currentApi.talk(["/ip/route/print"]);
             const item = replies.filter((r) => r.command === "!re").map((r) => r.attributes).find(r => r[".id"] === id);

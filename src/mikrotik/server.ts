@@ -1,30 +1,16 @@
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-    CallToolRequestSchema,
-    ListToolsRequestSchema,
-    ListResourcesRequestSchema,
-    ReadResourceRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { callToolHandler, listResourcesHandler, readResourceHandler, initializeApi } from "./handlers.js";
 import { tools } from "./tools.js";
 
-const server = new Server(
-    {
-        name: "mikrotik-api",
-        version: "1.0.5",
-    },
-    {
-        capabilities: {
-            tools: {},
-            prompts: {},
-            resources: {},
-        },
-    }
-);
+// Create server instance
+const server = new McpServer({
+    name: "mikrotik-api",
+    version: "1.0.6",
+});
 
-const prompts = [
+const promptsData = [
     { name: "mk-connect: Connect to MikroTik", description: "connect to MikroTik using host, user and password" },
     { name: "mk-report: System Report", description: "show a comprehensive system report" },
     { name: "mk-get-route: Routing Table", description: "print ip/route to show the routing table" },
@@ -33,16 +19,20 @@ const prompts = [
     { name: "mk-awr: Security Audit", description: "audit router's security and performance" }
 ];
 
-const PromptsListRequestSchema = z.object({
-    method: z.literal("prompts/list"),
-    params: z.object({}),
-});
-
-server.setRequestHandler(PromptsListRequestSchema, async () => {
-    return {
-        prompts,
-    };
-});
+// Register Prompts
+server.registerPrompt("mikrotik-prompts", {
+    description: "List available MikroTik prompts"
+}, async () => ({
+    messages: [
+        {
+            role: "assistant",
+            content: {
+                type: "text",
+                text: "Available MikroTik prompts:\n" + promptsData.map(p => `- ${p.name}: ${p.description}`).join("\n")
+            }
+        }
+    ]
+}));
 
 let lock: Promise<any> = Promise.resolve();
 
@@ -59,18 +49,71 @@ async function executeSequential<T>(fn: () => Promise<T>): Promise<T> {
     return result;
 }
 
-server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
-
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
-    return executeSequential(() => callToolHandler(request));
+// Register Resource Templates
+const ifaceTemplate = new ResourceTemplate("mikrotik://interface/{name}", { 
+    list: async () => executeSequential(() => listResourcesHandler({} as any)) 
+});
+const bridgeTemplate = new ResourceTemplate("mikrotik://bridge/{name}", { 
+    list: async () => executeSequential(() => listResourcesHandler({} as any)) 
+});
+const bridgePortTemplate = new ResourceTemplate("mikrotik://bridge/{bridge}/{port}", { 
+    list: async () => executeSequential(() => listResourcesHandler({} as any)) 
+});
+const routeTemplate = new ResourceTemplate("mikrotik://route/{id}", { 
+    list: async () => executeSequential(() => listResourcesHandler({} as any)) 
 });
 
-server.setRequestHandler(ListResourcesRequestSchema, async (request) => {
-    return executeSequential(() => listResourcesHandler(request));
+server.registerResource("Interface", ifaceTemplate, { description: "MikroTik interface information" }, async (uri: URL) => {
+    return executeSequential(() => readResourceHandler({ params: { uri: uri.toString() } } as any));
+});
+server.registerResource("Bridge", bridgeTemplate, { description: "MikroTik bridge information" }, async (uri: URL) => {
+    return executeSequential(() => readResourceHandler({ params: { uri: uri.toString() } } as any));
+});
+server.registerResource("Bridge Port", bridgePortTemplate, { description: "MikroTik bridge port information" }, async (uri: URL) => {
+    return executeSequential(() => readResourceHandler({ params: { uri: uri.toString() } } as any));
+});
+server.registerResource("Route", routeTemplate, { description: "MikroTik routing information" }, async (uri: URL) => {
+    return executeSequential(() => readResourceHandler({ params: { uri: uri.toString() } } as any));
 });
 
-server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-    return executeSequential(() => readResourceHandler(request));
+// Register Tools
+tools.forEach((tool: any) => {
+    // Basic mapping of JSON schema to Zod for simple cases
+    let inputSchema: any = z.object({});
+    if (tool.inputSchema && tool.inputSchema.properties) {
+        const shape: Record<string, any> = {};
+        for (const [key, prop] of Object.entries(tool.inputSchema.properties)) {
+            let field: any = z.any();
+            if ((prop as any).type === "string") {
+                field = z.string();
+            } else if ((prop as any).type === "boolean") {
+                field = z.boolean();
+            }
+            
+            if ((prop as any).description) {
+                field = field.describe((prop as any).description);
+            }
+            
+            if (tool.inputSchema.required && !(tool.inputSchema.required as string[]).includes(key)) {
+                field = field.optional();
+            } else if (!tool.inputSchema.required) {
+                field = field.optional();
+            }
+            shape[key] = field;
+        }
+        inputSchema = z.object(shape);
+    }
+
+    server.registerTool(
+        tool.name,
+        {
+            description: tool.description,
+            inputSchema: inputSchema
+        },
+        async (args: any) => {
+            return executeSequential(() => callToolHandler({ params: { name: tool.name, arguments: args } } as any));
+        }
+    );
 });
 
 export async function runServer() {
@@ -83,7 +126,6 @@ export async function runServer() {
             await initializeApi(host, undefined, undefined, secure);
         } catch (error) {
             console.error("Failed to connect to MikroTik:", error);
-            // Don't exit here, allow the server to start even if connection fails
         }
     } else {
         console.error("Warning: No MikroTik host provided. Use mk-connect tool before using other functionality.");
