@@ -22,7 +22,8 @@ ARG TARGETARCH
 # Using full 'basic' package instead of 'basiclite' as it includes encryption libraries
 # Supports both ARM64 and x86_64 architectures
 RUN apt-get update && apt-get upgrade -y && \
-    apt-get install -y libaio1 libnsl2 curl unzip && \
+    apt-get install -y libnsl2 curl unzip && \
+    (apt-get install -y libaio1 || apt-get install -y libaio1t64) && \
     rm -rf /var/lib/apt/lists/* && \
     cd /tmp && \
     # Detect architecture and set appropriate download URL
